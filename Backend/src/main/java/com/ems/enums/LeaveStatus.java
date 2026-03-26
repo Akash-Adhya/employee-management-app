@@ -1,7 +1,8 @@
 package com.ems.enums;
 
 public enum LeaveStatus {
-	PENDING,
-	ACCEPTED,
-	REJECTED
+    REQUESTED,
+    GRANTED,
+    REJECTED,
+    COMPLETED
 }

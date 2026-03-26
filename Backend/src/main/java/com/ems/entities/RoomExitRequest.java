@@ -1,12 +1,11 @@
 package com.ems.entities;
 
-import com.ems.enums.TaskStatus;
+import com.ems.enums.RoomExitRequestStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
-
 
 @Entity
 @Getter
@@ -14,31 +13,29 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class Task {
-
+public class RoomExitRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private UUID id;
 
+    private String reason;
 
-    private String title;
-    private String description;
-    private LocalDateTime dueDate;
+    private LocalDateTime requestedTime;
 
     @Enumerated(EnumType.STRING)
-    private TaskStatus taskStatus;
-
-    private LocalDateTime statusLastUpdationTime;
+    private RoomExitRequestStatus status;
 
     @ManyToOne
-    @JoinColumn(name = "room_id")
-    private Room room;
+    @JoinColumn(name = "manager_id")
+    private User manager;
 
     @ManyToOne
     @JoinColumn(name = "employee_id")
     private User employee;
 
+
     @ManyToOne
-    @JoinColumn(name = "manager_id")
-    private User manager;
+    @JoinColumn(name = "room_id")
+    private Room room;
+
 }

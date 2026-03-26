@@ -10,9 +10,10 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class Manager {
-    private String department;
-    private String designation;
-    private Integer yearsOfExperience;
-    private String officeLocation;
+public class Address {
+    private  String street;
+    private String city;
+    private String state;
+    private String pinCode;
+    private String country;
 }
