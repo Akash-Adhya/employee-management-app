@@ -303,6 +303,7 @@ MIT License
 
 # 👤 Author
 
+**Saikat Bera**
 **Akash Adhya**
 
 ---
