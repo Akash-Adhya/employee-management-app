@@ -4,6 +4,7 @@ import com.ems.enums.Role;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -15,8 +16,8 @@ import java.util.UUID;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     private String name;
 
@@ -53,5 +54,6 @@ public class User {
     @JoinColumn(name = "room_id")
     private Room room;
 
+    private LocalDateTime createdAt = LocalDateTime.now();
 
 }
