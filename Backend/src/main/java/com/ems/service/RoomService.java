@@ -8,7 +8,7 @@ public interface RoomService {
     
     RoomServiceResponseDTO createRoom(String managerId);
     RoomServiceResponseDTO updateRoom(Long roomId, RoomServiceRequestDTO room);
-    void deleteRoom(RoomServiceRequestDTO room);
+    void deleteRoom(Long roomId);
     RoomServiceResponseDTO fetchRoomDetails(Long RoomId);
     
 }

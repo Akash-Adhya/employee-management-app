@@ -9,6 +9,7 @@ import com.ems.repositories.UserRepository;
 import com.ems.requestdto.RoomServiceRequestDTO;
 import com.ems.responsedto.RoomServiceResponseDTO;
 import com.ems.service.RoomService;
+import com.ems.utils.Utility;
 
 
 @Service
@@ -35,13 +36,24 @@ public class RoomServiceImpl implements RoomService{
     }
 
     @Override
-    public void deleteRoom(RoomServiceRequestDTO room) {
+    public void deleteRoom(Long roomId) {
 
     }
 
     @Override
     public RoomServiceResponseDTO fetchRoomDetails(Long RoomId) {
         return null;
+    }
+
+
+    private String generateUniqueRoomCode() {
+        String code;
+
+        do{
+            code = Utility.generateRoomCode();
+        } while(roomRepository.findByRoomCode(code).isPresent());
+
+        return code;
     }
 
    

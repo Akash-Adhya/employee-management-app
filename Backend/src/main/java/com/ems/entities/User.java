@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Entity
 @Getter
@@ -34,7 +33,7 @@ public class User {
     private  String imageUrl;
 
     @Column(nullable = false,unique = true)
-    private String EmployeeId;
+    private String employeeId;
 
     @Enumerated(EnumType.STRING)
     private Role role;
