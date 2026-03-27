@@ -4,16 +4,22 @@ package com.ems.serviceImpl;
 import org.springframework.stereotype.Service;
 
 import com.ems.entities.Room;
+import com.ems.repositories.RoomRepository;
+import com.ems.repositories.UserRepository;
 import com.ems.service.RoomService;
 
 
 @Service
 public class RoomServiceImpl implements RoomService{
 
-    private final Room room;
+    private final RoomRepository roomRepository;
+    private final UserRepository userRepository;
 
-    public RoomServiceImpl(Room room){
-        this.room = room;
+    
+
+    public RoomServiceImpl(RoomRepository roomRepository, UserRepository userRepository) {
+        this.roomRepository = roomRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -22,18 +28,20 @@ public class RoomServiceImpl implements RoomService{
     }
 
     @Override
-    public Room updateRoom(Room room) {
+    public Room updateRoom(Long roomId, Room room) {
         return null;
     }
 
     @Override
-    public Room deleteRoom(Room room) {
-        return null;
+    public void deleteRoom(Room room) {
+
     }
 
     @Override
-    public Room fetchRoomDetails(String RoomId) {
+    public Room fetchRoomDetails(Long RoomId) {
         return null;
     }
+
+   
     
 }
