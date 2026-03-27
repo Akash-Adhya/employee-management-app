@@ -3,6 +3,7 @@ package com.ems.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -34,5 +35,7 @@ public class Room {
 
     @OneToMany(mappedBy = "room")
     private List<Task> tasks;
+
+    private LocalDateTime createdAt;
 
 }
