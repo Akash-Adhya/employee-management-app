@@ -13,8 +13,8 @@ import java.time.LocalDate;
 @ToString
 public class Employee {
     private String empId;
-    private String designation;
+    private String EmployeeDesignation;
     private String skills;
-    private Integer yearsOfExperience;
+    private Integer EmployeeYearsOfExperience;
     private LocalDate joiningDate;
 }

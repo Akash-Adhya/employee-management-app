@@ -12,7 +12,7 @@ import lombok.*;
 @ToString
 public class Manager {
     private String department;
-    private String designation;
-    private Integer yearsOfExperience;
+    private String ManagerDesignation;
+    private Integer ManagerYearsOfExperience;
     private String officeLocation;
 }
