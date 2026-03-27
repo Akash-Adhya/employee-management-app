@@ -15,7 +15,7 @@ import java.util.UUID;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     private String name;
@@ -31,6 +31,9 @@ public class User {
 
 
     private  String imageUrl;
+
+    @Column(nullable = false,unique = true)
+    private String EmployeeId;
 
     @Enumerated(EnumType.STRING)
     private Role role;
