@@ -8,5 +8,4 @@ public interface RoomService {
     Room updateRoom(Long roomId, Room room);
     void deleteRoom(Room room);
     Room fetchRoomDetails(Long RoomId);
-    
 }

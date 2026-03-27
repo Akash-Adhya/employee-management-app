@@ -7,5 +7,4 @@ import com.ems.entities.Room;
 
 public interface RoomRepository extends JpaRepository<Room, Long> {
     Optional<Room> findByRoomCode(String roomCode);
-    
 }
