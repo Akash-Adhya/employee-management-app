@@ -17,13 +17,15 @@ import java.util.UUID;
 public class LeaveRequest {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     private LocalDate startDate;
     private LocalDate endDate;
 
+    @Enumerated(EnumType.STRING)
     private LeaveStatus leaveStatus;
+
     private LocalDateTime appliedAt;
 
     @ManyToOne
