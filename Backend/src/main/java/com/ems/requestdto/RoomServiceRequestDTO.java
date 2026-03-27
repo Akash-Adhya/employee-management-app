@@ -1,4 +1,4 @@
-package com.ems.requestDTO;
+package com.ems.requestdto;
 
 
 public class RoomServiceRequestDTO {
