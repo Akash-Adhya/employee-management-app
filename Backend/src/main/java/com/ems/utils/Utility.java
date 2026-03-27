@@ -7,7 +7,7 @@ public class Utility {
     private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     private static final int LENGTH = 12;
 
-    public static String generateRandomString() {
+    public static String generateRoomCode() {
         SecureRandom random = new SecureRandom();
         StringBuilder result = new StringBuilder(LENGTH);
 

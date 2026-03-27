@@ -6,7 +6,10 @@ import org.springframework.stereotype.Service;
 import com.ems.entities.Room;
 import com.ems.repositories.RoomRepository;
 import com.ems.repositories.UserRepository;
+import com.ems.requestdto.RoomServiceRequestDTO;
+import com.ems.responsedto.RoomServiceResponseDTO;
 import com.ems.service.RoomService;
+import com.ems.utils.Utility;
 
 
 @Service
@@ -23,23 +26,34 @@ public class RoomServiceImpl implements RoomService{
     }
 
     @Override
-    public Room createRoom(String managerId) {
+    public RoomServiceResponseDTO createRoom(String managerId) {
         return null;
     }
 
     @Override
-    public Room updateRoom(Long roomId, Room room) {
+    public RoomServiceResponseDTO updateRoom(Long roomId, RoomServiceRequestDTO room) {
         return null;
     }
 
     @Override
-    public void deleteRoom(Room room) {
+    public void deleteRoom(Long roomId) {
 
     }
 
     @Override
-    public Room fetchRoomDetails(Long RoomId) {
+    public RoomServiceResponseDTO fetchRoomDetails(Long RoomId) {
         return null;
+    }
+
+
+    private String generateUniqueRoomCode() {
+        String code;
+
+        do{
+            code = Utility.generateRoomCode();
+        } while(roomRepository.findByRoomCode(code).isPresent());
+
+        return code;
     }
 
    
