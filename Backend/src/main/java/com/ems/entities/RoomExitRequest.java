@@ -15,7 +15,7 @@ import java.util.UUID;
 @ToString
 public class RoomExitRequest {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     private String reason;
