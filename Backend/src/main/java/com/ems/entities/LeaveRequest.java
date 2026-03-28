@@ -26,6 +26,7 @@ public class LeaveRequest {
     private LeaveStatus leaveStatus;
 
     private LocalDateTime appliedAt;
+    private LocalDateTime statusUpdatedAt;
 
     @ManyToOne
     @JoinColumn(name = "employee_id")
