@@ -11,7 +11,6 @@ import java.util.List;
 public interface RoomService {
 
     // MANAGER METHODS
-
     RoomResponseDTO createRoom(
             String managerEmpId,
             RoomCreationRequestDTO dto
