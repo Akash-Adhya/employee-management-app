@@ -4,7 +4,7 @@ import java.security.SecureRandom;
 
 public class Utility {
     
-    private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz";
     private static final int LENGTH = 12;
 
     public static String generateRoomCode() {
