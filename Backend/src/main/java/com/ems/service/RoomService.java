@@ -1,6 +1,5 @@
 package com.ems.service;
 
-
 import com.ems.requestdto.room.RoomCreationRequestDTO;
 import com.ems.requestdto.room.RoomUpdationRequestDTO;
 import com.ems.responsedto.room.EmployeeResponseRoomDTO;
@@ -11,15 +10,51 @@ import java.util.List;
 
 public interface RoomService {
 
-    //Manager Methods
-    RoomResponseDTO createRoom(String managerEmpId, RoomCreationRequestDTO dto);
-    RoomResponseDTO updateRoom(Long roomId,String managerEmpId, RoomUpdationRequestDTO dto);
-    void deleteRoom(Long roomId,String managerEmpId);
-    RoomResponseDTO getRoomById(Long roomId,String managerEmpId);
-    List<RoomResponseDTO> getAllRoomCreatedByManager(String managerEmpId);
-    List<EmployeeResponseRoomDTO> getAllEmployeeOfTheRoom(Long roomId,String managerEmpId);
-    List<ManagerTaskResponseDTO> getAllTaskCreatedOnTheRoom(Long roomId,String managerEmpId);
+    // MANAGER METHODS
 
-    //Employee Methods
+    RoomResponseDTO createRoom(
+            String managerEmpId,
+            RoomCreationRequestDTO dto
+    );
+
+
+    RoomResponseDTO updateRoom(
+            Long roomId,
+            String managerEmpId,
+            RoomUpdationRequestDTO dto
+    );
+
+
+    void deleteRoom(
+            Long roomId,
+            String managerEmpId
+    );
+
+
+    RoomResponseDTO getRoomById(
+            Long roomId,
+            String managerEmpId
+    );
+
+
+    List<RoomResponseDTO> getAllRoomCreatedByManager(
+            String managerEmpId
+    );
+
+
+    List<EmployeeResponseRoomDTO> getAllEmployeeOfTheRoom(
+            Long roomId,
+            String managerEmpId
+    );
+
+
+    List<ManagerTaskResponseDTO> getAllTaskCreatedOnTheRoom(
+            Long roomId,
+            String managerEmpId
+    );
+
+
+    // EMPLOYEE METHODS
+
     RoomResponseDTO getRoomByCode(String roomCode);
 }

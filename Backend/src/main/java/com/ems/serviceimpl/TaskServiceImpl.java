@@ -1,5 +1,6 @@
 package com.ems.serviceimpl;
 
+import com.ems.enums.TaskStatus;
 import com.ems.requestdto.task.CreateTaskRequestDTO;
 import com.ems.requestdto.task.UpdateTaskRequestDTO;
 import com.ems.responsedto.task.EmployeeTaskResponseDTO;
@@ -10,6 +11,7 @@ import com.ems.service.TaskService;
 import java.util.List;
 
 public class TaskServiceImpl implements TaskService {
+
     @Override
     public ManagerTaskResponseDTO createTask(String managerEmpId, CreateTaskRequestDTO dto) {
         return null;
@@ -41,12 +43,12 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public EmployeeTaskResponseDTO getTaskByEmpId(String employeeId, Long taskId) {
+    public EmployeeTaskResponseDTO getTaskForEmployee(String employeeId, Long taskId) {
         return null;
     }
 
     @Override
-    public EmployeeTaskResponseDTO updateTaskStatusByEmpId(String employeeId, String status) {
+    public EmployeeTaskResponseDTO updateTaskStatusByEmpId(String employeeId, Long taskId, TaskStatus status) {
         return null;
     }
 }
