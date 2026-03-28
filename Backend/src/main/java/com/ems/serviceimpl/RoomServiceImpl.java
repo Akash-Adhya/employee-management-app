@@ -21,7 +21,7 @@ public class RoomServiceImpl implements RoomService{
     }
 
     @Override
-    public RoomResponseDTO updateRoom(String managerEmpId, RoomUpdationRequestDTO dto) {
+    public RoomResponseDTO updateRoom(Long roomId,String managerEmpId, RoomUpdationRequestDTO dto) {
         return null;
     }
 
@@ -41,12 +41,12 @@ public class RoomServiceImpl implements RoomService{
     }
 
     @Override
-    public List<EmployeeResponseRoomDTO> getAllEmployeeOfTheRoom(Long roomId) {
+    public List<EmployeeResponseRoomDTO> getAllEmployeeOfTheRoom(Long roomId,String managerEmpId) {
         return List.of();
     }
 
     @Override
-    public List<ManagerTaskResponseDTO> getAllTaskCreatedOnTheRoom(Long roomId) {
+    public List<ManagerTaskResponseDTO> getAllTaskCreatedOnTheRoom(Long roomId,String managerEmpId) {
         return List.of();
     }
 

@@ -13,13 +13,13 @@ public interface RoomService {
 
     //Manager Methods
     RoomResponseDTO createRoom(String managerEmpId, RoomCreationRequestDTO dto);
-    RoomResponseDTO updateRoom(String managerEmpId, RoomUpdationRequestDTO dto);
+    RoomResponseDTO updateRoom(Long roomId,String managerEmpId, RoomUpdationRequestDTO dto);
     void deleteRoom(Long roomId,String managerEmpId);
     RoomResponseDTO getRoomById(Long roomId,String managerEmpId);
     List<RoomResponseDTO> getAllRoomCreatedByManager(String managerEmpId);
-    List<EmployeeResponseRoomDTO> getAllEmployeeOfTheRoom(Long roomId);
-    List<ManagerTaskResponseDTO> getAllTaskCreatedOnTheRoom(Long roomId);
-    
+    List<EmployeeResponseRoomDTO> getAllEmployeeOfTheRoom(Long roomId,String managerEmpId);
+    List<ManagerTaskResponseDTO> getAllTaskCreatedOnTheRoom(Long roomId,String managerEmpId);
+
     //Employee Methods
     RoomResponseDTO getRoomByCode(String roomCode);
 }

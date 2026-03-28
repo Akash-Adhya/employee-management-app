@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 
 @Getter
@@ -22,4 +23,6 @@ public class UpdateTaskRequestDTO {
 
     @Future(message = "Due date must be in future")
     private LocalDateTime dueDate;
+
+    List<Long> employeeIds;
 }

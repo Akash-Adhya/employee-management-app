@@ -24,7 +24,4 @@ public class ManagerTaskResponseDTO {
 
     private String managerName;
     private String managerEmail;
-
-    private List<EmployeeTaskSummaryDTO> assignedEmployees;
-
 }
