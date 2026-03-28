@@ -1,14 +1,13 @@
 package com.ems.service;
 
 
-import com.ems.requestdto.RoomServiceRequestDTO;
-import com.ems.responsedto.RoomServiceResponseDTO;
-
 public interface RoomService {
-    
-    RoomServiceResponseDTO createRoom(String managerId);
-    RoomServiceResponseDTO updateRoom(Long roomId, RoomServiceRequestDTO room);
-    void deleteRoom(Long roomId);
-    RoomServiceResponseDTO fetchRoomDetails(Long RoomId);
-    
+//
+//    RoomResponseDTO createRoom(String managerId, String roomName, String description);
+//    RoomResponseDTO updateRoom(Long roomId, RoomCreationRequestDTO room);
+//    void deleteRoom(Long roomId);
+//    RoomResponseDTO fetchRoomDetails(Long RoomId);
+
+
+
 }

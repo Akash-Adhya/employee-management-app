@@ -3,58 +3,50 @@ package com.ems.serviceimpl;
 
 import org.springframework.stereotype.Service;
 
-import com.ems.entities.Room;
-import com.ems.repositories.RoomRepository;
-import com.ems.repositories.UserRepository;
-import com.ems.requestdto.RoomServiceRequestDTO;
-import com.ems.responsedto.RoomServiceResponseDTO;
 import com.ems.service.RoomService;
-import com.ems.utils.Utility;
 
 
 @Service
 public class RoomServiceImpl implements RoomService{
-
-    private final RoomRepository roomRepository;
-    private final UserRepository userRepository;
-
-    
-
-    public RoomServiceImpl(RoomRepository roomRepository, UserRepository userRepository) {
-        this.roomRepository = roomRepository;
-        this.userRepository = userRepository;
-    }
-
-    @Override
-    public RoomServiceResponseDTO createRoom(String managerId) {
-        return null;
-    }
-
-    @Override
-    public RoomServiceResponseDTO updateRoom(Long roomId, RoomServiceRequestDTO room) {
-        return null;
-    }
-
-    @Override
-    public void deleteRoom(Long roomId) {
-
-    }
-
-    @Override
-    public RoomServiceResponseDTO fetchRoomDetails(Long RoomId) {
-        return null;
-    }
-
-
-    private String generateUniqueRoomCode() {
-        String code;
-
-        do{
-            code = Utility.generateRoomCode();
-        } while(roomRepository.findByRoomCode(code).isPresent());
-
-        return code;
-    }
+//
+//    private final RoomRepository roomRepository;
+//    private final UserRepository userRepository;
+//
+//
+//
+//    public RoomServiceImpl(RoomRepository roomRepository, UserRepository userRepository) {
+//        this.roomRepository = roomRepository;
+//        this.userRepository = userRepository;
+//    }
+//
+//    @Override
+//    public RoomResponseDTO createRoom(String managerId, String roomName, String description) {
+//        return null;
+//    }
+//
+//    @Override
+//    public RoomResponseDTO updateRoom(Long roomId, RoomCreationRequestDTO room) {
+//        return null;
+//    }
+//
+//    @Override
+//    public void deleteRoom(Long roomId) {
+//
+//    }
+//
+//    @Override
+//    public RoomResponseDTO fetchRoomDetails(Long RoomId) {
+//        return null;
+//    }
+//
+//
+//    private String generateUniqueRoomCode() {
+//        String code;
+//        do{
+//            code = Utility.generateRoomCode();
+//        } while(roomRepository.findByRoomCode(code).isPresent());
+//        return code;
+//    }
 
    
     

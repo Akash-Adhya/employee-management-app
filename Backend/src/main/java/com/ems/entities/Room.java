@@ -35,6 +35,6 @@ public class Room {
     @OneToMany(mappedBy = "room")
     private List<Task> tasks;
 
-    private LocalDateTime createdAt;
+    private LocalDateTime createdAt = LocalDateTime.now();
 
 }

@@ -35,6 +35,7 @@ public class User {
     @Column(nullable = false,unique = true)
     private String employeeId;
 
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Role role;
 

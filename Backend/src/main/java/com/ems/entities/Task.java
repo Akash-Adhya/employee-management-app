@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 
 @Entity
@@ -19,25 +20,18 @@ public class Task {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
     private String title;
     private String description;
     private LocalDateTime dueDate;
-
-    @Enumerated(EnumType.STRING)
-    private TaskStatus taskStatus;
-
-    private LocalDateTime statusLastUpdationTime;
 
     @ManyToOne
     @JoinColumn(name = "room_id")
     private Room room;
 
     @ManyToOne
-    @JoinColumn(name = "employee_id")
-    private User employee;
-
-    @ManyToOne
     @JoinColumn(name = "manager_id")
     private User manager;
+
+    @OneToMany(mappedBy = "task")
+    private List<EmployeeToTask> employeeTasks;
 }
