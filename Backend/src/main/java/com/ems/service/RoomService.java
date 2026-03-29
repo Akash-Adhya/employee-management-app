@@ -36,15 +36,10 @@ public interface RoomService {
     );
 
 
-    List<RoomResponseDTO> getAllRoomCreatedByManager(
-            String managerEmpId
-    );
+    List<RoomResponseDTO> getAllRoomCreatedByManager(String managerEmpId);
 
 
-    List<EmployeeResponseRoomDTO> getAllEmployeeOfTheRoom(
-            Long roomId,
-            String managerEmpId
-    );
+    List<EmployeeResponseRoomDTO> getAllEmployeeOfTheRoom(Long roomId, String managerEmpId);
 
 
     List<ManagerTaskResponseDTO> getAllTaskCreatedOnTheRoom(
