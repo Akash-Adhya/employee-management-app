@@ -1,5 +1,6 @@
 package com.ems.entities;
 
+import com.ems.enums.AccountStatus;
 import com.ems.enums.Role;
 import jakarta.persistence.*;
 import lombok.*;
@@ -29,7 +30,9 @@ public class User {
 
     @Column(nullable = false)
     private String password;
-
+    
+    @Column(nullable = false)
+    private AccountStatus accountStatus = AccountStatus.ACTIVE;
 
     private  String imageUrl;
 
