@@ -12,9 +12,8 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @ToString
 public class Employee {
-    private String empId;
-    private String EmployeeDesignation;
+    private String employeeDesignation;
     private String skills;
-    private Integer EmployeeYearsOfExperience;
+    private Integer employeeYearsOfExperience;
     private LocalDate joiningDate;
 }
