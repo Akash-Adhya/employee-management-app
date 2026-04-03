@@ -25,11 +25,10 @@ public class EmployeeToTask {
 
     @ManyToOne
     @JoinColumn(name = "employee_id")
-    private User Employee;
+    private Employee Employee;
 
     @Enumerated(EnumType.STRING)
     private TaskStatus taskStatus;
-
 
     private LocalDateTime statusUpdationTime;
 }

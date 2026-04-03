@@ -43,21 +43,21 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    //Embeded Objects
-    @Embedded
-    private Manager manager;
-    @Embedded
-    private Employee employee;
+    //Embedded Objects
     @Embedded
     private Address address;
 
     @Embedded
     private Authentication auth;
 
-    @ManyToOne
-    @JoinColumn(name = "room_id")
-    private Room room;
 
     private LocalDateTime createdAt = LocalDateTime.now();
 
+
+
+    @OneToOne(mappedBy = "user",cascade = CascadeType.ALL)
+    private Manager manager;
+
+    @OneToOne(mappedBy = "user",cascade = CascadeType.ALL)
+    private Employee employee;
 }

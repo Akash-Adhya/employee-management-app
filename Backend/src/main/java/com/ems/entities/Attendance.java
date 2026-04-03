@@ -32,11 +32,11 @@ public class Attendance {
 
     @ManyToOne
     @JoinColumn(name = "employee_id")
-    private User employee;
+    private Employee employee;
 
     @ManyToOne
     @JoinColumn(name = "manager_id")
-    private User manager;
+    private Manager manager;
 
     @ManyToOne
     @JoinColumn(name = "room_id")

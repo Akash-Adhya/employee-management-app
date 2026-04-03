@@ -30,8 +30,8 @@ public class Task {
 
     @ManyToOne
     @JoinColumn(name = "manager_id")
-    private User manager;
+    private Manager manager;
 
     @OneToMany(mappedBy = "task")
-    private List<EmployeeToTask> employeeTasks;
+    private List<EmployeeToTask> employees;
 }

@@ -21,16 +21,17 @@ public class Room {
 
     private String roomName;
     private String description;
-    
+    private boolean isLocked = false;
+
     @Column(unique = true, nullable = false)
     private String roomCode;
 
     @ManyToOne
     @JoinColumn(name = "manager_id")
-    private User manager;
+    private Manager manager;
 
     @OneToMany(mappedBy = "room")
-    private List<User> employees;
+    private List<Employee> employees;
 
     @OneToMany(mappedBy = "room")
     private List<Task> tasks;

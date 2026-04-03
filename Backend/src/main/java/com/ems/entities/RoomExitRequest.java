@@ -26,11 +26,11 @@ public class RoomExitRequest {
 
     @ManyToOne
     @JoinColumn(name = "manager_id")
-    private User manager;
+    private Manager manager;
 
     @ManyToOne
     @JoinColumn(name = "employee_id")
-    private User employee;
+    private Employee employee;
 
 
     @ManyToOne

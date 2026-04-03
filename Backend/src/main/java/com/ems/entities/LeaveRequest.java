@@ -30,11 +30,11 @@ public class LeaveRequest {
 
     @ManyToOne
     @JoinColumn(name = "employee_id")
-    private User Employee;
+    private Employee Employee;
 
     @ManyToOne
     @JoinColumn(name = "manager_id")
-    private User manager;
+    private Manager manager;
 
     @ManyToOne
     @JoinColumn(name = "room_id")
