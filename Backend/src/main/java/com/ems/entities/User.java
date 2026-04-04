@@ -5,6 +5,7 @@ import com.ems.enums.Role;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -30,6 +31,8 @@ public class User {
 
     @Column(nullable = false)
     private String password;
+
+    private LocalDate dob;
 
     @Column(nullable = false)
     private AccountStatus accountStatus = AccountStatus.ACTIVE;
