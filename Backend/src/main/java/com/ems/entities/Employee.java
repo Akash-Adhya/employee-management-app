@@ -20,6 +20,7 @@ public class Employee {
     private String skills;
     private Integer employeeYearsOfExperience;
     private LocalDate joiningDate;
+    private String officeLocation;
 
     @OneToOne
     @MapsId
