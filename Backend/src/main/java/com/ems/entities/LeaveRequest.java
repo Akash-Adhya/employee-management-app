@@ -1,5 +1,6 @@
 package com.ems.entities;
 
+import com.ems.enums.LeaveCategory;
 import com.ems.enums.LeaveStatus;
 import jakarta.persistence.*;
 import lombok.*;
@@ -19,13 +20,19 @@ public class LeaveRequest {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String title;
+    private String description;
+
+    @Enumerated(EnumType.STRING)
+    private LeaveCategory category;
+
     private LocalDate startDate;
     private LocalDate endDate;
 
     @Enumerated(EnumType.STRING)
     private LeaveStatus leaveStatus;
 
-    private LocalDateTime appliedAt;
+    private LocalDateTime appliedAt = LocalDateTime.now();
     private LocalDateTime statusUpdatedAt;
 
     @ManyToOne

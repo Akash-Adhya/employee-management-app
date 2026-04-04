@@ -19,10 +19,10 @@ public class RoomExitRequest {
 
     private String reason;
 
-    private LocalDateTime requestedTime;
+    private LocalDateTime requestedTime = LocalDateTime.now();
 
     @Enumerated(EnumType.STRING)
-    private RoomExitRequestStatus status;
+    private RoomExitRequestStatus status = RoomExitRequestStatus.REQUESTED;
 
     @ManyToOne
     @JoinColumn(name = "manager_id")

@@ -52,12 +52,4 @@ public class User {
 
 
     private LocalDateTime createdAt = LocalDateTime.now();
-
-
-
-    @OneToOne(mappedBy = "user",cascade = CascadeType.ALL)
-    private Manager manager;
-
-    @OneToOne(mappedBy = "user",cascade = CascadeType.ALL)
-    private Employee employee;
 }
