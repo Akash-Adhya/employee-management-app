@@ -5,22 +5,13 @@ import com.ems.entities.User;
 
 public class AuthMapper {
     
-    AuthResponseDTO toAuthResponseDTO(User user, String token){
-
+    public static AuthResponseDTO toAuthResponseDTO(User user, String token){
         AuthResponseDTO responseDTO = new AuthResponseDTO();
-
         responseDTO.setToken(token);
         responseDTO.setEmail(user.getEmail());
         responseDTO.setEmployeeId(user.getEmployeeId());
         responseDTO.setRole(user.getRole().toString());
         responseDTO.setUserId(user.getId());
-        
-        // responseDTO.setRoomCode(roomCode);
-
-        // if(user.getRole() == Role.EMPLOYEE){
-        //     responseDTO.setManagerEmployeeId();
-        // }
-
         return responseDTO;
     }
 }
