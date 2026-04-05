@@ -5,7 +5,7 @@ import com.ems.entities.EmployeeToTask;
 
 public class EmployeeToTaskMapper {
 
-    public EmployeeTaskResponseDTO mapToDto(EmployeeToTask et) {
+    public static EmployeeTaskResponseDTO mapToDto(EmployeeToTask et) {
         EmployeeTaskResponseDTO dto = new EmployeeTaskResponseDTO();
 
         dto.setTaskId(et.getTask().getId());

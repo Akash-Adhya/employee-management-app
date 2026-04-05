@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface EmployeeTaskService {
 
-    public List<EmployeeTaskResponseDTO> getAllTasks(Long employeeId);
+    List<EmployeeTaskResponseDTO> getAllTasks(Long employeeId);
     List<EmployeeTaskResponseDTO> getTasksByStatus(Long employeeId, TaskStatus status);
 
 }
