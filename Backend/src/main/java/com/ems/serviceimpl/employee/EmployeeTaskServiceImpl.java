@@ -1,4 +1,6 @@
 package com.ems.serviceimpl.employee;
 
-public class EmployeeTaskServiceImpl {
+import com.ems.service.employee.EmployeeService;
+
+public class EmployeeTaskServiceImpl implements  EmployeeService{
 }

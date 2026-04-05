@@ -25,7 +25,7 @@ public class EmployeeToTask {
 
     @ManyToOne
     @JoinColumn(name = "employee_id")
-    private Employee Employee;
+    private Employee employee;
 
     @Enumerated(EnumType.STRING)
     private TaskStatus taskStatus = TaskStatus.ASSIGNED;

@@ -1,4 +1,13 @@
 package com.ems.service.employee;
 
+import com.ems.dto.responsDto.EmployeeTaskResponseDTO;
+import com.ems.enums.TaskStatus;
+
+import java.util.List;
+
 public interface EmployeeTaskService {
+
+    public List<EmployeeTaskResponseDTO> getAllTasks(Long employeeId);
+    List<EmployeeTaskResponseDTO> getTasksByStatus(Long employeeId, TaskStatus status);
+
 }
