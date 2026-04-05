@@ -12,6 +12,9 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class EmployeeTaskResponseDTO {
+
+    private Long taskId;
+    
     private String title;
 
     private String description;
