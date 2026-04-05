@@ -21,7 +21,7 @@ public class AuthResponseDTO {
     private Long userId;
 
     // only if employee
-    private String managerEmployeeId;
+    // private String managerEmployeeId;
 
-    private String roomCode;
+    // private String roomCode;
 }
