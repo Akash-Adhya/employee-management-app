@@ -2,16 +2,21 @@ package com.ems.controllers.employee;
 
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ems.dto.requestDto.TaskUpdateRequestDTO;
 import com.ems.dto.responsDto.EmployeeTaskResponseDTO;
+import com.ems.dto.responsDto.SimpleApiResponse;
 import com.ems.enums.TaskStatus;
 import com.ems.service.employee.EmployeeTaskService;
 
 import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
@@ -35,9 +40,23 @@ public class EmployeeTaskController {
     public ResponseEntity<List<EmployeeTaskResponseDTO>> getTasksByStatus(
             @Valid @PathVariable Long employeeId,
             @Valid @PathVariable TaskStatus status) {
-                
+
         List<EmployeeTaskResponseDTO> list = service.getTasksByStatus(employeeId, status);
         return ResponseEntity.ok().body(list);
+    }
+
+    @PutMapping("/task/status/{employeeTaskId}")
+    public ResponseEntity<SimpleApiResponse> updateTaskStatus(@PathVariable Long employeeTaskId,
+            @RequestParam TaskStatus status) {
+        return ResponseEntity.ok().body(service.updateTaskStatus(employeeTaskId, status));
+    }
+
+    @PutMapping("/task/{taskId}")
+    public ResponseEntity<SimpleApiResponse> updateTask(
+            @PathVariable Long taskId,
+            @RequestBody @Valid TaskUpdateRequestDTO dto) {
+
+        return ResponseEntity.ok(service.updateTask(taskId, dto));
     }
 
 }
