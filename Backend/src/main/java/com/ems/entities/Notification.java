@@ -20,9 +20,9 @@ public class Notification {
 
     private String message;
 
-    private boolean isRead;
+    private boolean isRead = false;
 
-    private LocalDateTime createdAt;
+    private LocalDateTime createdAt = LocalDateTime.now();
 
     @Enumerated(EnumType.STRING)
     private NotificationType notificationType;
