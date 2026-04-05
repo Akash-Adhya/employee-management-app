@@ -28,7 +28,7 @@ public class EmployeeToTask {
     private Employee Employee;
 
     @Enumerated(EnumType.STRING)
-    private TaskStatus taskStatus;
+    private TaskStatus taskStatus = TaskStatus.ASSIGNED;
 
     private LocalDateTime statusUpdationTime;
 }
