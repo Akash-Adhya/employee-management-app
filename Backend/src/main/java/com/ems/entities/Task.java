@@ -1,6 +1,5 @@
 package com.ems.entities;
 
-import com.ems.enums.TaskStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
