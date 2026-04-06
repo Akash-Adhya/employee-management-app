@@ -1,143 +1,128 @@
----------------------------------------------------
--- USERS (Managers + Employees)
----------------------------------------------------
-
+--------------------------------------------------
+-- USER
+--------------------------------------------------
 INSERT INTO user
-(name, email, contact_no, password, image_url, employee_id, role,
- department, manager_designation, manager_years_of_experience, office_location,
- emp_id, employee_designation, skills, employee_years_of_experience, joining_date,
- street, city, state, pin_code, country,
- provider, provider_id, email_verified,
- created_at, room_id)
+(id,name,email,contact_no,password,dob,account_status,image_url,employee_id,role,
+ street,city,state,pin_code,country,
+ provider,provider_id,email_verified,email_verification_token,email_verification_token_expiry,
+ reset_password_token,reset_password_expiry,
+ created_at)
 VALUES
--- Managers
-('Rahul Sharma','rahul@ems.com','9000000001','pass123',NULL,'M001','MANAGER',
- 'Engineering','Senior Manager',10,'Bangalore',
- NULL,NULL,NULL,NULL,NULL,
- 'MG Road','Bangalore','Karnataka','560001','India',
- 'LOCAL',NULL,true,
- NOW(),NULL),
 
-('Priya Mehta','priya@ems.com','9000000002','pass123',NULL,'M002','MANAGER',
- 'Product','Product Manager',8,'Bangalore',
- NULL,NULL,NULL,NULL,NULL,
- 'Whitefield','Bangalore','Karnataka','560066','India',
- 'LOCAL',NULL,true,
- NOW(),NULL),
+    (1,'Rahul Sharma','rahul@ems.com','9000000001','pass123','1990-05-10','ACTIVE',NULL,'EMP001','MANAGER',
+     'BTM Layout','Bangalore','Karnataka','560076','India',
+     'LOCAL',NULL,true,NULL,NULL,NULL,NULL,NOW()),
 
--- Employees
-('Amit Das','amit@ems.com','9000000003','pass123',NULL,'E001','EMPLOYEE',
- NULL,NULL,NULL,NULL,
- 'E001','Software Engineer','Java,Spring',3,'2023-06-01',
- 'BTM','Bangalore','Karnataka','560076','India',
- 'LOCAL',NULL,true,
- NOW(),NULL),
+    (2,'Amit Das','amit@ems.com','9000000002','pass123','1998-03-15','ACTIVE',NULL,'EMP002','EMPLOYEE',
+     'Whitefield','Bangalore','Karnataka','560066','India',
+     'LOCAL',NULL,true,NULL,NULL,NULL,NULL,NOW()),
 
-('Sneha Roy','sneha@ems.com','9000000004','pass123',NULL,'E002','EMPLOYEE',
- NULL,NULL,NULL,NULL,
- 'E002','Frontend Developer','React,JS',2,'2023-07-15',
- 'Marathahalli','Bangalore','Karnataka','560037','India',
- 'LOCAL',NULL,true,
- NOW(),NULL),
-
-('Arjun Singh','arjun@ems.com','9000000005','pass123',NULL,'E003','EMPLOYEE',
- NULL,NULL,NULL,NULL,
- 'E003','Backend Developer','Node,Spring',4,'2022-09-10',
- 'Indiranagar','Bangalore','Karnataka','560038','India',
- 'LOCAL',NULL,true,
- NOW(),NULL);
+    (3,'Priya Singh','priya@ems.com','9000000003','pass123','1997-07-21','ACTIVE',NULL,'EMP003','EMPLOYEE',
+     'Indiranagar','Bangalore','Karnataka','560038','India',
+     'LOCAL',NULL,true,NULL,NULL,NULL,NULL,NOW());
 
 
----------------------------------------------------
--- ROOMS
----------------------------------------------------
+--------------------------------------------------
+-- MANAGER
+--------------------------------------------------
+INSERT INTO manager
+(id,department,manager_designation,manager_years_of_experience,office_location)
+VALUES
+    (1,'IT','Engineering Manager',10,'Bangalore');
 
+
+--------------------------------------------------
+-- ROOM
+--------------------------------------------------
 INSERT INTO room
-(room_name, description, room_code, manager_id, created_at)
+(id,room_name,description,is_locked,room_code,manager_id,created_at)
 VALUES
-    ('Backend Team','Handles backend services','RM101',1,NOW()),
-    ('Frontend Team','Handles UI development','RM102',2,NOW());
+    (1,'Backend Team','Handles Spring Boot APIs',false,'ROOM001',1,NOW()),
+
+    (2,'Frontend Team','Handles React UI',false,'ROOM002',1,NOW());
 
 
----------------------------------------------------
--- ASSIGN EMPLOYEES TO ROOMS
----------------------------------------------------
+--------------------------------------------------
+-- EMPLOYEE
+--------------------------------------------------
+INSERT INTO employee
+(id,employee_designation,skills,employee_years_of_experience,joining_date,office_location,room_id)
+VALUES
 
-UPDATE user SET room_id = 1 WHERE employee_id IN ('E001','E003');
-UPDATE user SET room_id = 2 WHERE employee_id = 'E002';
+    (2,'Software Engineer','Java, Spring Boot',3,'2022-06-01','Bangalore',1),
+
+    (3,'Frontend Developer','React, JavaScript',2,'2023-01-15','Bangalore',2);
 
 
----------------------------------------------------
--- TASKS
----------------------------------------------------
-
+--------------------------------------------------
+-- TASK
+--------------------------------------------------
 INSERT INTO task
-(title, description, due_date, room_id, manager_id)
+(id,title,description,due_date,room_id,manager_id)
 VALUES
-    ('Create Login API','Implement JWT authentication',DATE_ADD(NOW(), INTERVAL 5 DAY),1,1),
 
-    ('Develop Dashboard UI','React dashboard page',DATE_ADD(NOW(), INTERVAL 7 DAY),2,2),
+    (1,'Develop Auth API','JWT login system',NOW(),1,1),
 
-    ('API Documentation','Write swagger docs',DATE_ADD(NOW(), INTERVAL 3 DAY),1,1);
+    (2,'Build Dashboard UI','Create responsive dashboard',NOW(),2,1);
 
 
----------------------------------------------------
--- TASK ASSIGNMENTS (EmployeeToTask)
----------------------------------------------------
-
+--------------------------------------------------
+-- EMPLOYEE TASK MAP
+--------------------------------------------------
 INSERT INTO employee_to_task
-(task_id, employee_id, task_status, status_updation_time)
+(id,task_id,employee_id,task_status,status_updation_time)
 VALUES
-    (1,3,'ASSIGNED',NOW()),
-    (1,5,'ASSIGNED',NOW()),
-    (2,4,'ASSIGNED',NOW()),
-    (3,3,'PENDING',NOW());
+
+    (1,1,2,'ASSIGNED',NOW()),
+
+    (2,2,3,'ASSIGNED',NOW());
 
 
----------------------------------------------------
--- LEAVE REQUESTS
----------------------------------------------------
-
+--------------------------------------------------
+-- LEAVE REQUEST
+--------------------------------------------------
 INSERT INTO leave_request
-(start_date,end_date,leave_status,applied_at,employee_id,manager_id,room_id)
-VALUES
-    ('2026-04-02','2026-04-04','REQUESTED',NOW(),3,1,1),
-
-    ('2026-04-05','2026-04-06','GRANTED',NOW(),4,2,2);
-
-
----------------------------------------------------
--- ATTENDANCE
----------------------------------------------------
-
-INSERT INTO attendance
-(date,check_in_time,check_out_time,attendance_status,remarks,
+(id,title,description,category,start_date,end_date,leave_status,
+ applied_at,status_updated_at,
  employee_id,manager_id,room_id)
 VALUES
-    (CURDATE(),NOW(),NULL,'PRESENT','On time',3,1,1),
 
-    (CURDATE(),NOW(),NULL,'PRESENT','Working remotely',4,2,2);
+    (1,'Medical Leave','Fever and rest','SICK_LEAVE',
+     '2026-04-10','2026-04-12','REQUESTED',
+     NOW(),NULL,
+     2,1,1);
 
 
----------------------------------------------------
--- NOTIFICATIONS
----------------------------------------------------
+--------------------------------------------------
+-- ATTENDANCE
+--------------------------------------------------
+INSERT INTO attendance
+(id,date,check_in_time,check_out_time,attendance_status,remarks,
+ employee_id,manager_id,room_id)
+VALUES
 
+    (1,'2026-04-05',NOW(),NOW(),'PRESENT','On time',2,1,1),
+
+    (2,'2026-04-05',NOW(),NOW(),'PRESENT','Completed UI tasks',3,1,2);
+
+
+--------------------------------------------------
+-- NOTIFICATION
+--------------------------------------------------
 INSERT INTO notification
-(message,is_read,created_at,notification_type,user_id)
+(id,message,is_read,created_at,notification_type,user_id)
 VALUES
-    ('New task assigned',false,NOW(),'INDIVIDUAL',3),
 
-    ('Leave approved',false,NOW(),'INDIVIDUAL',4),
+    (1,'New Task Assigned',false,NOW(),'INDIVIDUAL',2),
 
-    ('Room announcement',false,NOW(),'ROOM',5);
+    (2,'Room Announcement',false,NOW(),'ROOM',3);
 
 
----------------------------------------------------
+--------------------------------------------------
 -- ROOM EXIT REQUEST
----------------------------------------------------
-
+--------------------------------------------------
 INSERT INTO room_exit_request
-(reason,requested_time,status,manager_id,employee_id,room_id)
+(id,reason,requested_time,status,manager_id,employee_id,room_id)
 VALUES
-    ('Switching project',NOW(),'REQUESTED',1,5,1);
+
+    (1,'Doctor Appointment',NOW(),'REQUESTED',1,2,1);

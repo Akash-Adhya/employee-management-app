@@ -34,6 +34,7 @@ public class User {
 
     private LocalDate dob;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private AccountStatus accountStatus = AccountStatus.ACTIVE;
 
