@@ -12,6 +12,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RoomResponseDTO {
+    private Long roomId;
+
     private String roomName;
 
     private String description;

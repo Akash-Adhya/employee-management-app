@@ -16,11 +16,15 @@ import com.ems.repositories.ManagerRepo;
 import com.ems.repositories.NotificationRepo;
 import com.ems.repositories.UserRepo;
 import com.ems.service.user.UserService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Service
+@Transactional
 public class UserServiceImpl implements UserService {
 
     @Autowired
@@ -41,6 +45,7 @@ public class UserServiceImpl implements UserService {
     public UserResponseDTO getUserByEmployeeId(String empId) {
         User user = userRepo.findByEmployeeId(empId)
                 .orElseThrow(()->new ResourceNotFound("User with this Employee Id does not exist"));
+
         Long userId = user.getId();
         Employee employee = null;
         Manager manager = null;
