@@ -74,10 +74,4 @@ public class GlobalExceptionHandler {
                 HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(EmployeeTaskNotFoundException.class)
-    public ResponseEntity<?> handleEmployeeNotFoundException(EmployeeTaskNotFoundException ex) {
-        return new ResponseEntity<>(
-                ex.getMessage(),
-                HttpStatus.BAD_REQUEST);
-    }
 }
