@@ -11,6 +11,7 @@ import com.ems.dto.responsDto.EmployeeTaskResponseDTO;
 import com.ems.dto.responsDto.SimpleApiResponse;
 import com.ems.entities.EmployeeToTask;
 import com.ems.entities.Task;
+import com.ems.enums.Role;
 import com.ems.enums.TaskStatus;
 import com.ems.exceptions.ResourceNotFound;
 import com.ems.mapper.EmployeeToTaskMapper;
@@ -18,6 +19,8 @@ import com.ems.repositories.EmployeeRepo;
 import com.ems.repositories.EmployeeToTaskRepo;
 import com.ems.repositories.TaskRepo;
 import com.ems.service.employee.EmployeeTaskService;
+
+
 
 @Service
 public class EmployeeTaskServiceImpl implements EmployeeTaskService {
@@ -35,8 +38,8 @@ public class EmployeeTaskServiceImpl implements EmployeeTaskService {
     @Override
     public List<EmployeeTaskResponseDTO> getAllTasks(Long employeeId) {
 
-        if (!employeeRepo.existsById(employeeId)) {
-            throw new ResourceNotFound("Employee with employee id: " + employeeId + " not found.");
+        if (!employeeRepo.existsByIdAndUserRole(employeeId, Role.EMPLOYEE)) {
+            throw new ResourceNotFound("Employee with id " + employeeId + " not found or is not an employee.");
         }
 
         return empToTaskRepo.findByEmployeeId(employeeId)
@@ -48,8 +51,8 @@ public class EmployeeTaskServiceImpl implements EmployeeTaskService {
     @Override
     public List<EmployeeTaskResponseDTO> getTasksByStatus(Long employeeId, TaskStatus status) {
 
-        if (!employeeRepo.existsById(employeeId)) {
-            throw new ResourceNotFound("Employee with employee id: " + employeeId + " not found.");
+        if (!employeeRepo.existsByIdAndUserRole(employeeId, Role.EMPLOYEE)) {
+            throw new ResourceNotFound("Employee with id " + employeeId + " not found or is not an employee.");
         }
 
         if (status == null) {
