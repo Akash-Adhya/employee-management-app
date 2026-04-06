@@ -2,14 +2,9 @@ package com.ems.mapper;
 
 import com.ems.dto.responsDto.EmployeeBasicResponseDTO;
 import com.ems.dto.responsDto.RoomResponseDTO;
-import com.ems.entities.Employee;
 import com.ems.entities.Manager;
 import com.ems.entities.Room;
 import com.ems.entities.User;
-import com.ems.repositories.UserRepo;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.ArrayList;
 import java.util.List;
 
 public class RoomMapper {
