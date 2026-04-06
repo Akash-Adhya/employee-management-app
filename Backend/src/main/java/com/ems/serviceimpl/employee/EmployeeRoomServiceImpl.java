@@ -34,6 +34,6 @@ public class EmployeeRoomServiceImpl {
             throw new ResourceNotFound("Employee is not assigned to any room");
         }
 
-        return RoomMapper.mapToRoomResponseDTO(room);
+        return RoomMapper.toRoomResponseDTO(room);
     }
 }
