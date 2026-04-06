@@ -12,5 +12,6 @@ public interface ManagerRoomService {
     RoomResponseDTO updateRoom(Long roomId, RoomUpdateRequestDTO dto);
     String lockRoom(Long roomId);
     String unlockRoom(Long roomId);
-//    List<EmployeeBasicResponseDTO> getAllEmployeeInARoom();
+    List<EmployeeBasicResponseDTO> getAllEmployeeInARoom(Long roomId);
+    List<RoomResponseDTO> getAllRoomOfAManager(String employeeId);
 }

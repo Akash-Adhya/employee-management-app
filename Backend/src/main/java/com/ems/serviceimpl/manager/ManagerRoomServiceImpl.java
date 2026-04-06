@@ -2,11 +2,15 @@ package com.ems.serviceimpl.manager;
 
 import com.ems.dto.requestDto.RoomRequestDTO;
 import com.ems.dto.requestDto.RoomUpdateRequestDTO;
+import com.ems.dto.responsDto.EmployeeBasicResponseDTO;
 import com.ems.dto.responsDto.RoomResponseDTO;
+import com.ems.entities.Employee;
 import com.ems.entities.Manager;
 import com.ems.entities.Room;
 import com.ems.entities.User;
+import com.ems.enums.Role;
 import com.ems.exceptions.ResourceNotFound;
+import com.ems.mapper.EmployeeMapper;
 import com.ems.mapper.RoomMapper;
 import com.ems.repositories.ManagerRepo;
 import com.ems.repositories.RoomRepo;
@@ -16,6 +20,8 @@ import com.ems.utils.Utility;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -83,6 +89,36 @@ public class ManagerRoomServiceImpl implements ManagerRoomService {
         Room room = getRoomById(roomId);
         room.setLocked(false);
         return "Room unlocked successfully : " + room.getRoomName();
+    }
+
+    @Override
+    public List<EmployeeBasicResponseDTO> getAllEmployeeInARoom(Long roomId) {
+        Room room = getRoomById(roomId);
+        List<Employee> employeeList = room.getEmployees();
+        List<EmployeeBasicResponseDTO> employeeBasicResponseDTOS =
+                employeeList
+                        .stream()
+                        .map(EmployeeMapper::toEmployeeBasicResponseDTO)
+                        .toList();
+        return employeeBasicResponseDTOS;
+    }
+
+    @Override
+    public List<RoomResponseDTO> getAllRoomOfAManager(String employeeId) {
+        User user = userRepo.findByEmployeeId(employeeId)
+                .orElseThrow(()->new ResourceNotFound("No user exist with this employee Id : "+employeeId));
+        if(user.getRole() != Role.MANAGER){
+            throw new IllegalArgumentException("Api Route only accessible to the manager");
+        }
+        Manager manager = managerRepo.findById(user.getId())
+                .orElseThrow(()->new ResourceNotFound("No manager exist with this employee Id : "+employeeId));
+
+        List<Room> roomList = roomRepo.findByManager(manager);
+        List<RoomResponseDTO> roomResponseDTOS =
+                roomList.stream()
+                        .map(RoomMapper::toRoomResponseDTO)
+                        .toList();
+        return roomResponseDTOS;
     }
 
     private Room getRoomById(Long roomId) {
