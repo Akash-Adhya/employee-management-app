@@ -37,7 +37,7 @@ public class LeaveRequest {
 
     @ManyToOne
     @JoinColumn(name = "employee_id")
-    private Employee Employee;
+    private Employee employee;
 
     @ManyToOne
     @JoinColumn(name = "manager_id")
