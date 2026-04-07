@@ -1,4 +1,6 @@
 package com.ems.serviceimpl.employee;
 
-public class EmployeeLeaveServiceImpl {
+import com.ems.service.employee.EmployeeLeaveService;
+
+public class EmployeeLeaveServiceImpl implements EmployeeLeaveService {
 }
