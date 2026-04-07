@@ -11,6 +11,8 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 
+import com.ems.enums.LeaveCategory;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -27,8 +29,8 @@ public class LeaveRequestDTO {
     private String description;
 
 
-    @NotBlank(message = "Leave category is required")
-    private String category;
+    @NotNull(message = "Leave category is required")
+    private LeaveCategory category;
 
 
     @NotNull(message = "Start date is required")

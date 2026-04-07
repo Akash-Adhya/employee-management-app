@@ -2,6 +2,7 @@ package com.ems.serviceimpl.employee;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -41,8 +42,7 @@ public class EmployeeLeaveServiceImpl implements EmployeeLeaveService {
         leave.setTitle(requestDTO.getTitle());
         leave.setDescription(requestDTO.getDescription());
 
-
-        leave.setCategory(LeaveCategory.valueOf(requestDTO.getCategory().toUpperCase()));
+        leave.setCategory(requestDTO.getCategory());
 
         leave.setStartDate(requestDTO.getStartDate());
         leave.setEndDate(requestDTO.getEndDate());
@@ -60,13 +60,27 @@ public class EmployeeLeaveServiceImpl implements EmployeeLeaveService {
 
     @Override
     public List<LeaveResponseDTO> getLeaveRequest(Long employeeId) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getLeaveRequest'");
+
+        employeeRepo.findById(employeeId)
+                .orElseThrow(() -> new ResourceNotFound("Employee not found with id: " + employeeId));
+
+        return leaveRequestRepo.findByEmployeeId(employeeId)
+                .stream()
+                .map(LeaveMapper::leaveRequestToLeaveResponseDTO)
+                .collect(Collectors.toList());
     }
 
     @Override
     public List<LeaveResponseDTO> getLeaveRequestByStatus(Long employeeId, String status) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getLeaveRequestByStatus'");
+
+        employeeRepo.findById(employeeId)
+                .orElseThrow(() -> new ResourceNotFound("Employee not found with id: " + employeeId));
+
+        LeaveStatus leaveStatus = LeaveStatus.valueOf(status.toUpperCase());
+
+        return leaveRequestRepo.findByEmployeeIdAndLeaveStatus(employeeId, leaveStatus)
+                .stream()
+                .map(LeaveMapper::leaveRequestToLeaveResponseDTO)
+                .collect(Collectors.toList());
     }
 }
