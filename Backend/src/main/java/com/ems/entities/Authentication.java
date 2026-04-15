@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 public class Authentication {
     // OAuth
     @Enumerated(EnumType.STRING)
-    private AuthProvider provider;
+    private AuthProvider provider = AuthProvider.LOCAL;
     private String providerId;
 
     // email verification
