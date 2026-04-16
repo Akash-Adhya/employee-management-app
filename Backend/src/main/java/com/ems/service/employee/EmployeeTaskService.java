@@ -13,5 +13,4 @@ public interface EmployeeTaskService {
     List<EmployeeTaskResponseDTO> getTasksByStatus(Long employeeId, TaskStatus status);
     SimpleApiResponse updateTask(Long taskId, TaskUpdateRequestDTO dto);
     SimpleApiResponse updateTaskStatus(Long employeeId, TaskStatus status);
-
 }

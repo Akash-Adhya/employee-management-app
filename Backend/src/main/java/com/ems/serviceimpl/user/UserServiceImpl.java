@@ -14,6 +14,7 @@ import com.ems.repositories.ManagerRepo;
 import com.ems.repositories.NotificationRepo;
 import com.ems.repositories.UserRepo;
 import com.ems.service.user.UserService;
+import com.ems.utils.SecurityUtil;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,10 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
 
     @Autowired
+    SecurityUtil securityUtil;
+
+
+    @Autowired
     UserRepo userRepo;
     @Autowired
     EmployeeRepo employeeRepo;
@@ -34,43 +39,35 @@ public class UserServiceImpl implements UserService {
     @Autowired
     NotificationRepo notificationRepo;
 
+
     @Override
     public UserResponseDTO getLoggedInUser() {
-        User user = getCurrentUser();
+        User user = securityUtil.getCurrentUser();
         Employee employee = null;
         Manager manager = null;
         if(user.getRole() == Role.EMPLOYEE){
-            employee = employeeRepo.findById(user.getId())
-                    .orElseThrow(()->new ResourceNotFound("Employee not found"));
+            employee = securityUtil.getEmployee(user);
         }else{
-            manager = managerRepo.findById(user.getId())
-                    .orElseThrow(()->new ResourceNotFound("Manager not found"));
+            manager = securityUtil.getManager(user);
         }
         return UserMapper.toUserResponseDto(user,manager,employee);
     }
 
     @Override
     public UserResponseDTO getUserByEmployeeId(String empId) {
-        User user = userRepo.findByEmployeeId(empId)
-                .orElseThrow(()->new ResourceNotFound("User with this Employee Id does not exist"));
+        User user = securityUtil.getCurrentUser();
+        securityUtil.validateManager(user);
 
-        Long userId = user.getId();
-        Employee employee = null;
-        Manager manager = null;
-        if(user.getRole() == Role.EMPLOYEE){
-            employee = employeeRepo.findById(userId)
-                    .orElseThrow(()->new ResourceNotFound("User with this ID does not exist"));
-        }else if (user.getRole() == Role.MANAGER){
-            manager = managerRepo.findById(userId)
-                    .orElseThrow(()->new ResourceNotFound("User with this ID does not exist"));
-        }
+        Employee employee = employeeRepo.findByEmployeeId(empId)
+                .orElseThrow(()->new ResourceNotFound("User with this ID does not exist"));
 
-        return UserMapper.toUserResponseDto(user,manager,employee);
+
+        return UserMapper.toUserResponseDto(user,null,employee);
     }
 
     @Override
     public String updateUser(UpdateUserRequestDTO dto) {
-        User user = getCurrentUser();
+        User user = securityUtil.getCurrentUser();
 
         if(!isNullOrEmpty(dto.getName())){
             user.setName(dto.getName());
@@ -100,11 +97,9 @@ public class UserServiceImpl implements UserService {
         Employee employee = null;
         Manager manager = null;
         if(user.getRole() == Role.EMPLOYEE){
-            employee = employeeRepo.findById(user.getId())
-                    .orElseThrow(()->new ResourceNotFound("User with this ID does not exist"));
+            employee = securityUtil.getEmployee(user);
         }else if (user.getRole() == Role.MANAGER){
-            manager = managerRepo.findById(user.getId())
-                    .orElseThrow(()->new ResourceNotFound("User with this ID does not exist"));
+            manager = securityUtil.getManager(user);
         }
         if(employee != null){
             if(!isNullOrEmpty(dto.getEmployeeDesignation())){
@@ -145,7 +140,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public String updateAvatarOfUser(String imageUrl) {
-        User user = getCurrentUser();
+        User user = securityUtil.getCurrentUser();
         user.setImageUrl(imageUrl);
         userRepo.save(user);
         return "Avatar has been updated for employee ID : "+user.getEmployeeId();
@@ -153,7 +148,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public String removeAvatarOfUser() {
-        User user = getCurrentUser();
+        User user = securityUtil.getCurrentUser();
         user.setImageUrl(null);
         userRepo.save(user);
         return "Avatar has been removed for employee ID : "+user.getEmployeeId();
@@ -161,7 +156,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<NotificationResponseDTO> getAllNotificationOfUser() {
-        User user = getCurrentUser();
+        User user = securityUtil.getCurrentUser();
 
         List<Notification> notificationList =
                 notificationRepo.findByUser(user);
@@ -249,9 +244,5 @@ public class UserServiceImpl implements UserService {
             return ((String) data).trim().isEmpty();
         }
         return false;
-    }
-
-    private User getCurrentUser(){
-        return new User();
     }
 }
