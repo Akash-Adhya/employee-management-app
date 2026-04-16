@@ -1,12 +1,10 @@
 package com.ems.serviceimpl.user;
 
+import com.ems.dto.requestDto.SignUpRequestDTO;
 import com.ems.dto.requestDto.UpdateUserRequestDTO;
 import com.ems.dto.responsDto.NotificationResponseDTO;
 import com.ems.dto.responsDto.UserResponseDTO;
-import com.ems.entities.Employee;
-import com.ems.entities.Manager;
-import com.ems.entities.Notification;
-import com.ems.entities.User;
+import com.ems.entities.*;
 import com.ems.enums.Role;
 import com.ems.exceptions.ResourceNotFound;
 import com.ems.mapper.NotificationMapper;
@@ -38,7 +36,17 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponseDTO getLoggedInUser() {
-        return null;
+        User user = getCurrentUser();
+        Employee employee = null;
+        Manager manager = null;
+        if(user.getRole() == Role.EMPLOYEE){
+            employee = employeeRepo.findById(user.getId())
+                    .orElseThrow(()->new ResourceNotFound("Employee not found"));
+        }else{
+            manager = managerRepo.findById(user.getId())
+                    .orElseThrow(()->new ResourceNotFound("Manager not found"));
+        }
+        return UserMapper.toUserResponseDto(user,manager,employee);
     }
 
     @Override
@@ -61,9 +69,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String updateUserByEmployeeId(UpdateUserRequestDTO dto, String empId) {
-        User user = userRepo.findByEmployeeId(empId)
-                .orElseThrow(()->new ResourceNotFound("User with this employee ID not found"));
+    public String updateUser(UpdateUserRequestDTO dto) {
+        User user = getCurrentUser();
 
         if(!isNullOrEmpty(dto.getName())){
             user.setName(dto.getName());
@@ -137,27 +144,24 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String updateAvatarByEmployeeId(String empId, String imageUrl) {
-        User user = userRepo.findByEmployeeId(empId)
-                .orElseThrow(()->new ResourceNotFound("User with this employee ID not found"));
+    public String updateAvatarOfUser(String imageUrl) {
+        User user = getCurrentUser();
         user.setImageUrl(imageUrl);
         userRepo.save(user);
         return "Avatar has been updated for employee ID : "+user.getEmployeeId();
     }
 
     @Override
-    public String removeAvatarByEmployeeId(String empId) {
-        User user = userRepo.findByEmployeeId(empId)
-                .orElseThrow(()->new ResourceNotFound("User with this employee ID not found"));
+    public String removeAvatarOfUser() {
+        User user = getCurrentUser();
         user.setImageUrl(null);
         userRepo.save(user);
         return "Avatar has been removed for employee ID : "+user.getEmployeeId();
     }
 
     @Override
-    public List<NotificationResponseDTO> getAllNotificationOfUser(String employeeId) {
-        User user = userRepo.findByEmployeeId(employeeId)
-                .orElseThrow(()->new ResourceNotFound("User with this employee ID not found"));
+    public List<NotificationResponseDTO> getAllNotificationOfUser() {
+        User user = getCurrentUser();
 
         List<Notification> notificationList =
                 notificationRepo.findByUser(user);
@@ -169,10 +173,75 @@ public class UserServiceImpl implements UserService {
         return dtoList;
     }
 
+    @Override
+    public UserResponseDTO createUser(SignUpRequestDTO dto) {
+
+        User user = new User();
+
+        // mandatory fields
+        user.setName(dto.getName());
+        user.setEmail(dto.getEmail());
+        user.setContactNo(dto.getContactNo());
+        user.setPassword(dto.getPassword());
+        user.setEmployeeId(dto.getEmployeeId());
+        user.setRole(Role.valueOf(dto.getRole().toUpperCase()));
+
+        // optional fields
+        user.setDob(dto.getDob());
+        user.setImageUrl(dto.getImageUrl());
 
 
+        // Address (Embedded)
+        Address address = new Address();
+        address.setStreet(dto.getStreet());
+        address.setCity(dto.getCity());
+        address.setState(dto.getState());
+        address.setCountry(dto.getCountry());
+        address.setPinCode(dto.getPincode());
 
-    public static <T> boolean isNullOrEmpty(T data){
+        user.setAddress(address);
+
+
+        // save user first
+        User savedUser = userRepo.save(user);
+
+        Employee employee = null;
+        Manager manager = null;
+
+        // create role based entity
+        if(savedUser.getRole() == Role.EMPLOYEE){
+
+            employee = new Employee();
+
+            employee.setUser(savedUser);
+            employee.setEmployeeDesignation(dto.getEmployeeDesignation());
+            employee.setEmployeeYearsOfExperience(dto.getEmployeeYearsOfExperience());
+            employee.setJoiningDate(dto.getJoiningDate());
+            employee.setSkills(dto.getSkills());
+            employee.setOfficeLocation(dto.getOfficeLocation());
+
+            employeeRepo.save(employee);
+
+        }
+        else if(savedUser.getRole() == Role.MANAGER){
+
+            manager = new Manager();
+
+            manager.setUser(savedUser);
+            manager.setDepartment(dto.getDepartment());
+            manager.setManagerDesignation(dto.getManagerDesignation());
+            manager.setManagerYearsOfExperience(dto.getManagerYearsOfExperience());
+            manager.setOfficeLocation(dto.getOfficeLocation());
+
+            managerRepo.save(manager);
+        }
+
+
+        return UserMapper.toUserResponseDto(savedUser,manager,employee);
+    }
+
+
+    private static <T> boolean isNullOrEmpty(T data){
         if(data == null){
             return true;
         }
@@ -180,5 +249,9 @@ public class UserServiceImpl implements UserService {
             return ((String) data).trim().isEmpty();
         }
         return false;
+    }
+
+    private User getCurrentUser(){
+        return new User();
     }
 }

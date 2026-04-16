@@ -33,20 +33,10 @@ public class ManagerRoomServiceImpl implements ManagerRoomService {
     private final RoomRepo roomRepo;
 
     @Override
-    public RoomResponseDTO createRoom(String employeeId, RoomRequestDTO dto) {
+    public RoomResponseDTO createRoom(RoomRequestDTO dto) {
 
-        User user = userRepo.findByEmployeeId(employeeId)
-                .orElseThrow(() ->
-                        new ResourceNotFound(
-                                "User not found with employeeId: " + employeeId
-                        )
-                );
-        Manager manager = managerRepo.findByUser(user)
-                .orElseThrow(() ->
-                        new ResourceNotFound(
-                                "Access denied. Only managers can create rooms."
-                        )
-                );
+        User user = getCurrentUser();
+        Manager manager = getManager(user);
 
         Room room = new Room();
 
@@ -104,14 +94,12 @@ public class ManagerRoomServiceImpl implements ManagerRoomService {
     }
 
     @Override
-    public List<RoomResponseDTO> getAllRoomOfAManager(String employeeId) {
-        User user = userRepo.findByEmployeeId(employeeId)
-                .orElseThrow(()->new ResourceNotFound("No user exist with this employee Id : "+employeeId));
+    public List<RoomResponseDTO> getAllRoomOfAManager() {
+        User user = getCurrentUser();
         if(user.getRole() != Role.MANAGER){
             throw new IllegalArgumentException("Api Route only accessible to the manager");
         }
-        Manager manager = managerRepo.findById(user.getId())
-                .orElseThrow(()->new ResourceNotFound("No manager exist with this employee Id : "+employeeId));
+        Manager manager = getManager(user);
 
         List<Room> roomList = roomRepo.findByManager(manager);
         List<RoomResponseDTO> roomResponseDTOS =
@@ -126,6 +114,19 @@ public class ManagerRoomServiceImpl implements ManagerRoomService {
                 .orElseThrow(() ->
                         new ResourceNotFound(
                                 "Room not found with ID: " + roomId
+                        )
+                );
+    }
+
+
+    private User getCurrentUser(){
+        return new User();
+    }
+    private Manager getManager(User user){
+        return managerRepo.findByUser(user)
+                .orElseThrow(() ->
+                        new ResourceNotFound(
+                                "Access denied. Only managers can create rooms."
                         )
                 );
     }
