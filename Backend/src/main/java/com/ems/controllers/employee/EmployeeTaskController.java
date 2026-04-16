@@ -1,10 +1,10 @@
 package com.ems.controllers.employee;
 
+import com.ems.dto.responsDto.ApiResponseDto;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ems.dto.requestDto.TaskUpdateRequestDTO;
 import com.ems.dto.responsDto.EmployeeTaskResponseDTO;
-import com.ems.dto.responsDto.SimpleApiResponse;
 import com.ems.enums.TaskStatus;
 import com.ems.service.employee.EmployeeTaskService;
 
@@ -46,13 +46,13 @@ public class EmployeeTaskController {
     }
 
     @PutMapping("/task/status/{employeeTaskId}")
-    public ResponseEntity<SimpleApiResponse> updateTaskStatus(@PathVariable Long employeeTaskId,
-            @RequestParam TaskStatus status) {
+    public ResponseEntity<ApiResponseDto<String>> updateTaskStatus(@PathVariable Long employeeTaskId,
+                                                           @RequestParam TaskStatus status) {
         return ResponseEntity.ok().body(service.updateTaskStatus(employeeTaskId, status));
     }
 
     @PutMapping("/task/{taskId}")
-    public ResponseEntity<SimpleApiResponse> updateTask(
+    public ResponseEntity<ApiResponseDto<String>> updateTask(
             @PathVariable Long taskId,
             @RequestBody @Valid TaskUpdateRequestDTO dto) {
 
