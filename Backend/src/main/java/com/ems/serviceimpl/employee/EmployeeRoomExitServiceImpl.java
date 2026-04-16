@@ -1,9 +1,9 @@
 package com.ems.serviceimpl.employee;
 
+import com.ems.dto.responsDto.ApiResponseDto;
 import org.springframework.stereotype.Service;
 
 import com.ems.dto.requestDto.RoomExitRequestDTO;
-import com.ems.dto.responsDto.SimpleApiResponse;
 import com.ems.entities.Employee;
 import com.ems.entities.Room;
 import com.ems.entities.RoomExitRequest;
@@ -24,7 +24,7 @@ public class EmployeeRoomExitServiceImpl implements EmployeeRoomExitService {
     private final RoomExitRequestRepo roomExitRequestRepo;
 
     @Override
-    public SimpleApiResponse createExitRequest(Long employeeId, RoomExitRequestDTO dto) {
+    public ApiResponseDto<String> createExitRequest(Long employeeId, RoomExitRequestDTO dto) {
 
         Employee employee = employeeRepo.findById(employeeId)
                 .orElseThrow(() -> new ResourceNotFound(
@@ -55,7 +55,7 @@ public class EmployeeRoomExitServiceImpl implements EmployeeRoomExitService {
 
         roomExitRequestRepo.save(request);
 
-        return new SimpleApiResponse(true, "Room exit request is submitted successfully!");
+        return new ApiResponseDto<>("Room exit request is submitted successfully!", 200, "");
     }
 
 }
