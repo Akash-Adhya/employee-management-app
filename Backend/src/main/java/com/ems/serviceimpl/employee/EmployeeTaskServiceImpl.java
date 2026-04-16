@@ -3,11 +3,11 @@ package com.ems.serviceimpl.employee;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.ems.dto.responsDto.ApiResponseDto;
 import org.springframework.stereotype.Service;
 
 import com.ems.dto.requestDto.TaskUpdateRequestDTO;
 import com.ems.dto.responsDto.EmployeeTaskResponseDTO;
-import com.ems.dto.responsDto.SimpleApiResponse;
 import com.ems.entities.EmployeeToTask;
 import com.ems.entities.Task;
 import com.ems.enums.Role;
@@ -65,7 +65,7 @@ public class EmployeeTaskServiceImpl implements EmployeeTaskService {
     }
 
     @Override
-    public SimpleApiResponse updateTaskStatus(Long employeeTaskId, TaskStatus status) {
+    public ApiResponseDto<String> updateTaskStatus(Long employeeTaskId, TaskStatus status) {
 
         EmployeeToTask et = empToTaskRepo.findById(employeeTaskId)
                 .orElseThrow(() -> new ResourceNotFound(
@@ -76,11 +76,11 @@ public class EmployeeTaskServiceImpl implements EmployeeTaskService {
 
         empToTaskRepo.save(et);
 
-        return new SimpleApiResponse(true, "Task status updated successfully");
+        return new ApiResponseDto<>("Task status updated successfully", 200, "");
     }
 
     @Override
-    public SimpleApiResponse updateTask(Long taskId, TaskUpdateRequestDTO dto) {
+    public ApiResponseDto<String> updateTask(Long taskId, TaskUpdateRequestDTO dto) {
 
         Task task = taskRepo.findById(taskId)
                 .orElseThrow(() -> new ResourceNotFound("Task with id: " + taskId + " not found"));
@@ -99,7 +99,7 @@ public class EmployeeTaskServiceImpl implements EmployeeTaskService {
 
         taskRepo.save(task);
 
-        return new SimpleApiResponse(true, "Task Updated successfully.");
+        return new ApiResponseDto<>("Task Updated successfully.", 200, "");
 
     }
 
