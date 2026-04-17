@@ -1,5 +1,8 @@
 package com.ems.serviceimpl.employee;
 
+import com.ems.entities.User;
+import com.ems.service.employee.EmployeeRoomService;
+import com.ems.utils.SecurityUtil;
 import org.springframework.stereotype.Service;
 
 import com.ems.dto.responsDto.RoomResponseDTO;
@@ -16,24 +19,28 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class EmployeeRoomServiceImpl {
-    private final EmployeeRepo employeeRepo;
+public class EmployeeRoomServiceImpl implements EmployeeRoomService {
 
-    public RoomResponseDTO getRoomDetailsByEmployeeId(Long employeeId){
-        Employee employee = employeeRepo.findById(employeeId)
-            .orElseThrow(() -> new ResourceNotFound("Employee not found with id: " + employeeId));
+    private final SecurityUtil securityUtil;
 
-        
-        if(employee.getUser().getRole() != Role.EMPLOYEE){
-            throw new ResourceNotFound("User is not an employee with id: " + employeeId);
-        }
+    private Employee validateAndGetEmployee(){
+        User user = securityUtil.getCurrentUser();
+        securityUtil.validateEmployee(user);
+        return securityUtil.getEmployee(user);
+    }
+
+
+    @Override
+    public RoomResponseDTO getMyRoomDetails() {
+        Employee employee = validateAndGetEmployee();
 
         Room room = employee.getRoom();
 
-        if(room == null){
+        if (room == null){
             throw new ResourceNotFound("Employee is not assigned to any room");
         }
 
         return RoomMapper.toRoomResponseDTO(room);
     }
+
 }
