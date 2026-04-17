@@ -22,7 +22,7 @@ public class Authentication {
     private String providerId;
 
     // email verification
-    private boolean emailVerified;
+    private boolean emailVerified = false;
     private String emailVerificationToken;
     private LocalDateTime emailVerificationTokenExpiry;
 

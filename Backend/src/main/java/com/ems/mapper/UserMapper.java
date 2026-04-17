@@ -11,6 +11,7 @@ public class UserMapper {
             User user, Manager manager, Employee employee
     ){
         UserResponseDTO dto = new UserResponseDTO();
+        dto.setUserId(user.getId());
         dto.setName(user.getName());
         dto.setEmail(user.getEmail());
         dto.setContactNo(user.getContactNo());

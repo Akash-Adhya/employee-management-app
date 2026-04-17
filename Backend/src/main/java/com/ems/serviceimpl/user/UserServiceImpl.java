@@ -6,6 +6,7 @@ import com.ems.dto.responsDto.NotificationResponseDTO;
 import com.ems.dto.responsDto.UserResponseDTO;
 import com.ems.entities.*;
 import com.ems.enums.Role;
+import com.ems.exceptions.DuplicateEntry;
 import com.ems.exceptions.ResourceNotFound;
 import com.ems.mapper.NotificationMapper;
 import com.ems.mapper.UserMapper;
@@ -170,6 +171,20 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponseDTO createUser(SignUpRequestDTO dto) {
+
+        User existingUser = userRepo.findByEmail(dto.getEmail())
+                .orElse(null);
+        if(existingUser != null && existingUser.getAuth().isEmailVerified()==false){
+            
+        }
+
+        if(userRepo.existsByEmail(dto.getEmail()))
+            throw new DuplicateEntry("Email already exists");
+        if(userRepo.existsByEmployeeId(dto.getEmployeeId()))
+            throw new DuplicateEntry("User with this employee ID already exists");
+        if(userRepo.existsByContactNo(dto.getContactNo()))
+            throw new DuplicateEntry("User with this contact no. already exists");
+
 
         User user = new User();
 
