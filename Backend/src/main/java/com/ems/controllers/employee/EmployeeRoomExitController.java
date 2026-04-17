@@ -18,6 +18,8 @@ public class EmployeeRoomExitController {
     public ApiResponseDto<String> createExitStatus(
             @RequestBody RoomExitRequestDTO roomExitRequestDTO
             ) {
+
+        
         return employeeRoomExitService.createExitRequest(roomExitRequestDTO);
     }
 
