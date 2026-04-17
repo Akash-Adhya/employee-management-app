@@ -10,6 +10,7 @@ import com.ems.dto.requestDto.LeaveRequestDTO;
 import com.ems.dto.responsDto.LeaveResponseDTO;
 import com.ems.entities.Employee;
 import com.ems.entities.LeaveRequest;
+import com.ems.enums.LeaveCategory;
 import com.ems.enums.LeaveStatus;
 import com.ems.exceptions.ResourceNotFound;
 import com.ems.mapper.LeaveMapper;

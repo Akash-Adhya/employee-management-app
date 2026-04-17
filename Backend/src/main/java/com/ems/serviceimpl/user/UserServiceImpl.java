@@ -1,13 +1,12 @@
 package com.ems.serviceimpl.user;
 
+import com.ems.dto.requestDto.SignUpRequestDTO;
 import com.ems.dto.requestDto.UpdateUserRequestDTO;
 import com.ems.dto.responsDto.NotificationResponseDTO;
 import com.ems.dto.responsDto.UserResponseDTO;
-import com.ems.entities.Employee;
-import com.ems.entities.Manager;
-import com.ems.entities.Notification;
-import com.ems.entities.User;
+import com.ems.entities.*;
 import com.ems.enums.Role;
+import com.ems.exceptions.DuplicateEntry;
 import com.ems.exceptions.ResourceNotFound;
 import com.ems.mapper.NotificationMapper;
 import com.ems.mapper.UserMapper;
@@ -16,6 +15,7 @@ import com.ems.repositories.ManagerRepo;
 import com.ems.repositories.NotificationRepo;
 import com.ems.repositories.UserRepo;
 import com.ems.service.user.UserService;
+import com.ems.utils.SecurityUtil;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,6 +28,10 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
 
     @Autowired
+    SecurityUtil securityUtil;
+
+
+    @Autowired
     UserRepo userRepo;
     @Autowired
     EmployeeRepo employeeRepo;
@@ -36,34 +40,35 @@ public class UserServiceImpl implements UserService {
     @Autowired
     NotificationRepo notificationRepo;
 
+
     @Override
     public UserResponseDTO getLoggedInUser() {
-        return null;
-    }
-
-    @Override
-    public UserResponseDTO getUserByEmployeeId(String empId) {
-        User user = userRepo.findByEmployeeId(empId)
-                .orElseThrow(()->new ResourceNotFound("User with this Employee Id does not exist"));
-
-        Long userId = user.getId();
+        User user = securityUtil.getCurrentUser();
         Employee employee = null;
         Manager manager = null;
         if(user.getRole() == Role.EMPLOYEE){
-            employee = employeeRepo.findById(userId)
-                    .orElseThrow(()->new ResourceNotFound("User with this ID does not exist"));
-        }else if (user.getRole() == Role.MANAGER){
-            manager = managerRepo.findById(userId)
-                    .orElseThrow(()->new ResourceNotFound("User with this ID does not exist"));
+            employee = securityUtil.getEmployee(user);
+        }else{
+            manager = securityUtil.getManager(user);
         }
-
         return UserMapper.toUserResponseDto(user,manager,employee);
     }
 
     @Override
-    public String updateUserByEmployeeId(UpdateUserRequestDTO dto, String empId) {
-        User user = userRepo.findByEmployeeId(empId)
-                .orElseThrow(()->new ResourceNotFound("User with this employee ID not found"));
+    public UserResponseDTO getUserByEmployeeId(String empId) {
+        User user = securityUtil.getCurrentUser();
+        securityUtil.validateManager(user);
+
+        Employee employee = employeeRepo.findByEmployeeId(empId)
+                .orElseThrow(()->new ResourceNotFound("User with this ID does not exist"));
+
+
+        return UserMapper.toUserResponseDto(user,null,employee);
+    }
+
+    @Override
+    public String updateUser(UpdateUserRequestDTO dto) {
+        User user = securityUtil.getCurrentUser();
 
         if(!isNullOrEmpty(dto.getName())){
             user.setName(dto.getName());
@@ -93,11 +98,9 @@ public class UserServiceImpl implements UserService {
         Employee employee = null;
         Manager manager = null;
         if(user.getRole() == Role.EMPLOYEE){
-            employee = employeeRepo.findById(user.getId())
-                    .orElseThrow(()->new ResourceNotFound("User with this ID does not exist"));
+            employee = securityUtil.getEmployee(user);
         }else if (user.getRole() == Role.MANAGER){
-            manager = managerRepo.findById(user.getId())
-                    .orElseThrow(()->new ResourceNotFound("User with this ID does not exist"));
+            manager = securityUtil.getManager(user);
         }
         if(employee != null){
             if(!isNullOrEmpty(dto.getEmployeeDesignation())){
@@ -137,27 +140,24 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String updateAvatarByEmployeeId(String empId, String imageUrl) {
-        User user = userRepo.findByEmployeeId(empId)
-                .orElseThrow(()->new ResourceNotFound("User with this employee ID not found"));
+    public String updateAvatarOfUser(String imageUrl) {
+        User user = securityUtil.getCurrentUser();
         user.setImageUrl(imageUrl);
         userRepo.save(user);
         return "Avatar has been updated for employee ID : "+user.getEmployeeId();
     }
 
     @Override
-    public String removeAvatarByEmployeeId(String empId) {
-        User user = userRepo.findByEmployeeId(empId)
-                .orElseThrow(()->new ResourceNotFound("User with this employee ID not found"));
+    public String removeAvatarOfUser() {
+        User user = securityUtil.getCurrentUser();
         user.setImageUrl(null);
         userRepo.save(user);
         return "Avatar has been removed for employee ID : "+user.getEmployeeId();
     }
 
     @Override
-    public List<NotificationResponseDTO> getAllNotificationOfUser(String employeeId) {
-        User user = userRepo.findByEmployeeId(employeeId)
-                .orElseThrow(()->new ResourceNotFound("User with this employee ID not found"));
+    public List<NotificationResponseDTO> getAllNotificationOfUser() {
+        User user = securityUtil.getCurrentUser();
 
         List<Notification> notificationList =
                 notificationRepo.findByUser(user);
@@ -169,10 +169,89 @@ public class UserServiceImpl implements UserService {
         return dtoList;
     }
 
+    @Override
+    public UserResponseDTO createUser(SignUpRequestDTO dto) {
+
+        User existingUser = userRepo.findByEmail(dto.getEmail())
+                .orElse(null);
+        if(existingUser != null && existingUser.getAuth().isEmailVerified()==false){
+            
+        }
+
+        if(userRepo.existsByEmail(dto.getEmail()))
+            throw new DuplicateEntry("Email already exists");
+        if(userRepo.existsByEmployeeId(dto.getEmployeeId()))
+            throw new DuplicateEntry("User with this employee ID already exists");
+        if(userRepo.existsByContactNo(dto.getContactNo()))
+            throw new DuplicateEntry("User with this contact no. already exists");
 
 
+        User user = new User();
 
-    public static <T> boolean isNullOrEmpty(T data){
+        // mandatory fields
+        user.setName(dto.getName());
+        user.setEmail(dto.getEmail());
+        user.setContactNo(dto.getContactNo());
+        user.setPassword(dto.getPassword());
+        user.setEmployeeId(dto.getEmployeeId());
+        user.setRole(Role.valueOf(dto.getRole().toUpperCase()));
+
+        // optional fields
+        user.setDob(dto.getDob());
+        user.setImageUrl(dto.getImageUrl());
+
+
+        // Address (Embedded)
+        Address address = new Address();
+        address.setStreet(dto.getStreet());
+        address.setCity(dto.getCity());
+        address.setState(dto.getState());
+        address.setCountry(dto.getCountry());
+        address.setPinCode(dto.getPincode());
+
+        user.setAddress(address);
+
+
+        // save user first
+        User savedUser = userRepo.save(user);
+
+        Employee employee = null;
+        Manager manager = null;
+
+        // create role based entity
+        if(savedUser.getRole() == Role.EMPLOYEE){
+
+            employee = new Employee();
+
+            employee.setUser(savedUser);
+            employee.setEmployeeDesignation(dto.getEmployeeDesignation());
+            employee.setEmployeeYearsOfExperience(dto.getEmployeeYearsOfExperience());
+            employee.setJoiningDate(dto.getJoiningDate());
+            employee.setSkills(dto.getSkills());
+            employee.setOfficeLocation(dto.getOfficeLocation());
+
+            employeeRepo.save(employee);
+
+        }
+        else if(savedUser.getRole() == Role.MANAGER){
+
+            manager = new Manager();
+
+            manager.setUser(savedUser);
+            manager.setDepartment(dto.getDepartment());
+            manager.setManagerDesignation(dto.getManagerDesignation());
+            manager.setManagerYearsOfExperience(dto.getManagerYearsOfExperience());
+            manager.setOfficeLocation(dto.getOfficeLocation());
+
+            managerRepo.save(manager);
+        }
+
+
+        return UserMapper.toUserResponseDto(savedUser,manager,employee);
+    }
+
+
+    private static <T> boolean isNullOrEmpty(T data){
         if(data == null){
             return true;
         }

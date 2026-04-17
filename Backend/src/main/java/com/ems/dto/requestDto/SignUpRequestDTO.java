@@ -44,7 +44,7 @@ public class SignUpRequestDTO {
     @Past(message = "DOB must be in the past")
     private LocalDate dob;
 
-
+    private String imageUrl;
 
     // manager fields
 
@@ -107,7 +107,4 @@ public class SignUpRequestDTO {
 
     @Size(max = 100)
     private String country;
-
-
-    private String imageUrl;
 }
