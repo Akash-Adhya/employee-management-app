@@ -3,7 +3,6 @@ package com.ems.controllers.employee;
 import com.ems.dto.responsDto.ApiResponseDto;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ems.dto.requestDto.TaskUpdateRequestDTO;
 import com.ems.dto.responsDto.EmployeeTaskResponseDTO;
 import com.ems.enums.TaskStatus;
 import com.ems.service.employee.EmployeeTaskService;
@@ -16,7 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+
 
 import java.util.List;
 
