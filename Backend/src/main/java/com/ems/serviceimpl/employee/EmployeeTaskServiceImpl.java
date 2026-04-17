@@ -37,7 +37,7 @@ public class EmployeeTaskServiceImpl implements EmployeeTaskService {
     }
 
     @Override
-    public List<EmployeeTaskResponseDTO> getAllTasks(Long employeeId) {
+    public List<EmployeeTaskResponseDTO> getAllTasks() {
 
         Employee employee = validateAndGetEmployee();
 
@@ -49,7 +49,7 @@ public class EmployeeTaskServiceImpl implements EmployeeTaskService {
     }
 
     @Override
-    public List<EmployeeTaskResponseDTO> getTasksByStatus(Long employeeId, TaskStatus status) {
+    public List<EmployeeTaskResponseDTO> getTasksByStatus(TaskStatus status) {
 
         Employee employee = validateAndGetEmployee();
 

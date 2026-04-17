@@ -7,8 +7,8 @@ import com.ems.dto.responsDto.LeaveResponseDTO;
 
 public interface EmployeeLeaveService {
 
-    LeaveResponseDTO createLeaveRequest(Long employeeId, LeaveRequestDTO requestDTO);
-    List<LeaveResponseDTO> getLeaveRequest(Long employeeId);
-    List<LeaveResponseDTO> getLeaveRequestByStatus(Long employeeId, String status);
+    LeaveResponseDTO createLeaveRequest(LeaveRequestDTO requestDTO);
+    List<LeaveResponseDTO> getLeaveRequest();
+    List<LeaveResponseDTO> getLeaveRequestByStatus(String status);
 
 }
