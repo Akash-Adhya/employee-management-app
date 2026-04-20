@@ -6,6 +6,7 @@ import com.ems.dto.responsDto.AuthResponseDTO;
 import com.ems.entities.Authentication;
 import com.ems.entities.User;
 import com.ems.exceptions.AuthenticationException;
+import com.ems.exceptions.AuthorizationException;
 import com.ems.exceptions.ResourceNotFound;
 import com.ems.mapper.AuthMapper;
 import com.ems.repositories.UserRepo;
@@ -36,7 +37,7 @@ public class AuthServiceImpl implements AuthService {
         User user = userRepo.findByEmail(dto.getEmail())
                 .orElseThrow(()->new ResourceNotFound("User not found with this email. Try to create account first"));
 
-        if(!user.getAuth().isEmailVerified()){
+        if(user.getAuth() != null && !user.getAuth().isEmailVerified()){
             throw new RuntimeException("Email not verified yet try to create account first");
         }
 
@@ -51,7 +52,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public AuthResponseDTO sigUp(SignUpRequestDTO dto) {
+    public AuthResponseDTO signUp(SignUpRequestDTO dto) {
         dto.setPassword(passwordEncoder.encode(dto.getPassword()));
         User user = userService.createUser(dto);
         sendAccountCreationOtp(user.getEmail());
@@ -157,6 +158,22 @@ public class AuthServiceImpl implements AuthService {
         return "User logged out successfully";
     }
 
+    @Override
+    public AuthResponseDTO refreshAccessToken(String refreshToken) {
+        if(!jwtService.isRefreshToken(refreshToken)){
+           throw new AuthorizationException("Invalid refresh token");
+        }
+        if(jwtService.isTokenExpire(refreshToken)){
+            throw new AuthorizationException("Refresh token Expire");
+        }
+        String employeeId = jwtService.extractEmployeeId(refreshToken);
+        User user = userRepo.findByEmployeeId(employeeId)
+                .orElseThrow(()-> new ResourceNotFound("Employee not found with this employee ID: "+employeeId));
+
+        String accessToken = jwtService.generateAccessToken(user);
+
+        return AuthMapper.toAuthResponseDTO(user,accessToken,refreshToken);
+    }
 
 
     @Override
