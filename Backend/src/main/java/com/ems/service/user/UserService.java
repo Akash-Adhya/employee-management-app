@@ -4,6 +4,7 @@ import com.ems.dto.requestDto.SignUpRequestDTO;
 import com.ems.dto.requestDto.UpdateUserRequestDTO;
 import com.ems.dto.responsDto.NotificationResponseDTO;
 import com.ems.dto.responsDto.UserResponseDTO;
+import com.ems.entities.User;
 
 import java.util.List;
 
@@ -16,5 +17,5 @@ public interface UserService {
     List<NotificationResponseDTO> getAllNotificationOfUser();
 
     //auth part
-    UserResponseDTO createUser(SignUpRequestDTO dto);
+    User createUser(SignUpRequestDTO dto);
 }

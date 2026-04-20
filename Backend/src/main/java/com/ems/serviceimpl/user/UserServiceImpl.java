@@ -170,12 +170,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponseDTO createUser(SignUpRequestDTO dto) {
+    public User createUser(SignUpRequestDTO dto) {
 
         User existingUser = userRepo.findByEmail(dto.getEmail())
                 .orElse(null);
-        if(existingUser != null && existingUser.getAuth().isEmailVerified()==false){
-            
+        if(existingUser != null
+                && existingUser.getAuth() != null
+                && !existingUser.getAuth().isEmailVerified()){
+
+            userRepo.delete(existingUser);
         }
 
         if(userRepo.existsByEmail(dto.getEmail()))
@@ -247,7 +250,7 @@ public class UserServiceImpl implements UserService {
         }
 
 
-        return UserMapper.toUserResponseDto(savedUser,manager,employee);
+        return savedUser;
     }
 
 

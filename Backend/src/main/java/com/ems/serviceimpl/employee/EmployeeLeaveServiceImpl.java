@@ -4,8 +4,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.ems.entities.User;
-import com.ems.utils.SecurityUtil;
 import org.springframework.stereotype.Service;
 
 import com.ems.dto.requestDto.LeaveRequestDTO;
@@ -27,18 +25,12 @@ public class EmployeeLeaveServiceImpl implements EmployeeLeaveService {
 
     private final LeaveRequestRepo leaveRequestRepo;
     private final EmployeeRepo employeeRepo;
-    private final SecurityUtil securityUtil;
-
-    private Employee validateAndGetEmployee(){
-        User user = securityUtil.getCurrentUser();
-        securityUtil.validateEmployee(user);
-        return securityUtil.getEmployee(user);
-    }
 
     @Override
     public LeaveResponseDTO createLeaveRequest(LeaveRequestDTO requestDTO) {
 
-        Employee employee = validateAndGetEmployee();
+        Employee employee = employeeRepo.findById(employeeId)
+                .orElseThrow(() -> new ResourceNotFound("Employee not found with id: " + employeeId));
 
         if (requestDTO.getEndDate().isBefore(requestDTO.getStartDate())) {
             throw new IllegalArgumentException("End date cannot be before start date");
@@ -66,24 +58,26 @@ public class EmployeeLeaveServiceImpl implements EmployeeLeaveService {
     }
 
     @Override
-    public List<LeaveResponseDTO> getLeaveRequest() {
+    public List<LeaveResponseDTO> getLeaveRequest(Long employeeId) {
 
-        Employee employee = validateAndGetEmployee();
+        employeeRepo.findById(employeeId)
+                .orElseThrow(() -> new ResourceNotFound("Employee not found with id: " + employeeId));
 
-        return leaveRequestRepo.findByEmployeeId(employee.getId())
+        return leaveRequestRepo.findByEmployeeId(employeeId)
                 .stream()
                 .map(LeaveMapper::leaveRequestToLeaveResponseDTO)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<LeaveResponseDTO> getLeaveRequestByStatus(String status) {
+    public List<LeaveResponseDTO> getLeaveRequestByStatus(Long employeeId, String status) {
 
-        Employee employee = validateAndGetEmployee();
+        employeeRepo.findById(employeeId)
+                .orElseThrow(() -> new ResourceNotFound("Employee not found with id: " + employeeId));
 
         LeaveStatus leaveStatus = LeaveStatus.valueOf(status.toUpperCase());
 
-        return leaveRequestRepo.findByEmployeeIdAndLeaveStatus(employee.getId(), leaveStatus)
+        return leaveRequestRepo.findByEmployeeIdAndLeaveStatus(employeeId, leaveStatus)
                 .stream()
                 .map(LeaveMapper::leaveRequestToLeaveResponseDTO)
                 .collect(Collectors.toList());
