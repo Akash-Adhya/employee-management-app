@@ -19,8 +19,8 @@ public class EmployeeRoomExitController {
             @RequestBody RoomExitRequestDTO roomExitRequestDTO
             ) {
 
-        
-        return employeeRoomExitService.createExitRequest(roomExitRequestDTO);
+        String message = employeeRoomExitService.createExitRequest(roomExitRequestDTO);
+        return new ApiResponseDto<String>(message, 200, "");
     }
 
 }

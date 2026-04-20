@@ -28,7 +28,7 @@ public class EmployeeRoomExitServiceImpl implements EmployeeRoomExitService {
     }
 
     @Override
-    public ApiResponseDto<String> createExitRequest(RoomExitRequestDTO dto) {
+    public String createExitRequest(RoomExitRequestDTO dto) {
 
         Employee employee = validateAndGetEmployee();
 
@@ -53,7 +53,7 @@ public class EmployeeRoomExitServiceImpl implements EmployeeRoomExitService {
 
         roomExitRequestRepo.save(request);
 
-        return new ApiResponseDto<String>("Room exit request is submitted successfully!", 200, "");
+        return "Room exit request is submitted successfully!";
     }
 
 }
