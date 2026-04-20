@@ -1,106 +1,84 @@
 package com.ems.serviceimpl.employee;
 
-import java.time.LocalDateTime;
-import java.util.List;
 
-import com.ems.dto.responsDto.ApiResponseDto;
-import org.springframework.stereotype.Service;
-
-import com.ems.dto.requestDto.TaskUpdateRequestDTO;
 import com.ems.dto.responsDto.EmployeeTaskResponseDTO;
+import com.ems.entities.Employee;
 import com.ems.entities.EmployeeToTask;
-import com.ems.entities.Task;
-import com.ems.enums.Role;
+import com.ems.entities.User;
 import com.ems.enums.TaskStatus;
+import com.ems.exceptions.AuthorizationException;
 import com.ems.exceptions.ResourceNotFound;
 import com.ems.mapper.EmployeeToTaskMapper;
-import com.ems.repositories.EmployeeRepo;
 import com.ems.repositories.EmployeeToTaskRepo;
-import com.ems.repositories.TaskRepo;
 import com.ems.service.employee.EmployeeTaskService;
+import com.ems.utils.SecurityUtil;
+import org.springframework.stereotype.Service;
 
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 
 @Service
 public class EmployeeTaskServiceImpl implements EmployeeTaskService {
 
-    private final EmployeeRepo employeeRepo;
     private final EmployeeToTaskRepo empToTaskRepo;
-    private final TaskRepo taskRepo;
+    private final SecurityUtil securityUtil;
 
-    public EmployeeTaskServiceImpl(EmployeeToTaskRepo empToTaskRepo, EmployeeRepo employeeRepo, TaskRepo taskRepo) {
+    public EmployeeTaskServiceImpl(EmployeeToTaskRepo empToTaskRepo, SecurityUtil securityUtil) {
         this.empToTaskRepo = empToTaskRepo;
-        this.employeeRepo = employeeRepo;
-        this.taskRepo = taskRepo;
+        this.securityUtil = securityUtil;
+    }
+
+    private Employee validateAndGetEmployee(){
+        User user = securityUtil.getCurrentUser();
+        securityUtil.validateEmployee(user);
+        return securityUtil.getEmployee(user);
     }
 
     @Override
-    public List<EmployeeTaskResponseDTO> getAllTasks(Long employeeId) {
+    public List<EmployeeTaskResponseDTO> getAllTasks() {
 
-        if (!employeeRepo.existsByIdAndUserRole(employeeId, Role.EMPLOYEE)) {
-            throw new ResourceNotFound("Employee with id " + employeeId + " not found or is not an employee.");
-        }
+        Employee employee = validateAndGetEmployee();
 
-        return empToTaskRepo.findByEmployeeId(employeeId)
+
+        return empToTaskRepo.findByEmployeeId(employee.getId())
                 .stream()
                 .map(EmployeeToTaskMapper::mapToDto)
                 .toList();
     }
 
     @Override
-    public List<EmployeeTaskResponseDTO> getTasksByStatus(Long employeeId, TaskStatus status) {
+    public List<EmployeeTaskResponseDTO> getTasksByStatus(TaskStatus status) {
 
-        if (!employeeRepo.existsByIdAndUserRole(employeeId, Role.EMPLOYEE)) {
-            throw new ResourceNotFound("Employee with id " + employeeId + " not found or is not an employee.");
-        }
+        Employee employee = validateAndGetEmployee();
 
-        if (status == null) {
-            throw new IllegalArgumentException("Task status must not be null");
-        }
 
-        return empToTaskRepo.findByEmployeeIdAndTaskStatus(employeeId, status)
+        return empToTaskRepo
+                .findByEmployeeIdAndTaskStatus(employee.getId(), status)
                 .stream()
                 .map(EmployeeToTaskMapper::mapToDto)
                 .toList();
     }
 
     @Override
-    public ApiResponseDto<String> updateTaskStatus(Long employeeTaskId, TaskStatus status) {
+    public String updateTaskStatus(Long employeeTaskId, TaskStatus status) {
+
+        Employee employee = validateAndGetEmployee();
 
         EmployeeToTask et = empToTaskRepo.findById(employeeTaskId)
-                .orElseThrow(() -> new ResourceNotFound(
-                        "No task found for the employee with this task id : " + employeeTaskId));
+                .orElseThrow(() -> new ResourceNotFound("No task found with id: " + employeeTaskId));
+
+        if(!et.getEmployee().getId().equals(employee.getId())){
+            throw new AuthorizationException("You are not allowed to update this task");
+        }
 
         et.setTaskStatus(status);
         et.setStatusUpdationTime(LocalDateTime.now());
 
         empToTaskRepo.save(et);
 
-        return new ApiResponseDto<>("Task status updated successfully", 200, "");
-    }
-
-    @Override
-    public ApiResponseDto<String> updateTask(Long taskId, TaskUpdateRequestDTO dto) {
-
-        Task task = taskRepo.findById(taskId)
-                .orElseThrow(() -> new ResourceNotFound("Task with id: " + taskId + " not found"));
-
-        if (dto.getTitle() != null) {
-            task.setTitle(dto.getTitle());
-        }
-
-        if (dto.getDescription() != null) {
-            task.setDescription(dto.getDescription());
-        }
-
-        if (dto.getDueDate() != null) {
-            task.setDueDate(dto.getDueDate());
-        }
-
-        taskRepo.save(task);
-
-        return new ApiResponseDto<>("Task Updated successfully.", 200, "");
-
+        return "Task status updated successfully";
     }
 
 }

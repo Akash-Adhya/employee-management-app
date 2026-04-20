@@ -30,33 +30,26 @@ public class EmployeeTaskController {
         this.service = service;
     }
 
-    @GetMapping("/{employeeId}/tasks")
-    public ResponseEntity<List<EmployeeTaskResponseDTO>> getAllTasks(@PathVariable Long employeeId) {
-        List<EmployeeTaskResponseDTO> list = service.getAllTasks(employeeId);
+    @GetMapping("/tasks")
+    public ResponseEntity<List<EmployeeTaskResponseDTO>> getAllTasks() {
+        List<EmployeeTaskResponseDTO> list = service.getAllTasks();
         return ResponseEntity.ok().body(list);
     }
 
-    @GetMapping("/{employeeId}/tasks/{status}")
+    @GetMapping("/tasks/{status}")
     public ResponseEntity<List<EmployeeTaskResponseDTO>> getTasksByStatus(
-            @Valid @PathVariable Long employeeId,
             @Valid @PathVariable TaskStatus status) {
 
-        List<EmployeeTaskResponseDTO> list = service.getTasksByStatus(employeeId, status);
+        List<EmployeeTaskResponseDTO> list = service.getTasksByStatus(status);
         return ResponseEntity.ok().body(list);
     }
 
     @PutMapping("/task/status/{employeeTaskId}")
-    public ResponseEntity<ApiResponseDto<String>> updateTaskStatus(@PathVariable Long employeeTaskId,
+    public ApiResponseDto<String> updateTaskStatus(@PathVariable Long employeeTaskId,
                                                            @RequestParam TaskStatus status) {
-        return ResponseEntity.ok().body(service.updateTaskStatus(employeeTaskId, status));
+        String message = service.updateTaskStatus(employeeTaskId, status);
+        return new ApiResponseDto<>(message, 200, "");
     }
 
-    @PutMapping("/task/{taskId}")
-    public ResponseEntity<ApiResponseDto<String>> updateTask(
-            @PathVariable Long taskId,
-            @RequestBody @Valid TaskUpdateRequestDTO dto) {
-
-        return ResponseEntity.ok(service.updateTask(taskId, dto));
-    }
 
 }

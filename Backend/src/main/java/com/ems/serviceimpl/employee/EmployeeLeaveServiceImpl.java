@@ -1,24 +1,22 @@
 package com.ems.serviceimpl.employee;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.springframework.stereotype.Service;
-
 import com.ems.dto.requestDto.LeaveRequestDTO;
 import com.ems.dto.responsDto.LeaveResponseDTO;
 import com.ems.entities.Employee;
 import com.ems.entities.LeaveRequest;
-import com.ems.enums.LeaveCategory;
+import com.ems.entities.User;
 import com.ems.enums.LeaveStatus;
-import com.ems.exceptions.ResourceNotFound;
 import com.ems.mapper.LeaveMapper;
 import com.ems.repositories.EmployeeRepo;
 import com.ems.repositories.LeaveRequestRepo;
 import com.ems.service.employee.EmployeeLeaveService;
-
+import com.ems.utils.SecurityUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -26,12 +24,18 @@ public class EmployeeLeaveServiceImpl implements EmployeeLeaveService {
 
     private final LeaveRequestRepo leaveRequestRepo;
     private final EmployeeRepo employeeRepo;
+    private final SecurityUtil securityUtil;
+
+    private Employee validateAndGetEmployee() {
+        User user = securityUtil.getCurrentUser();
+        securityUtil.validateEmployee(user);
+        return securityUtil.getEmployee(user);
+    }
 
     @Override
-    public LeaveResponseDTO createLeaveRequest(Long employeeId, LeaveRequestDTO requestDTO) {
+    public LeaveResponseDTO createLeaveRequest(LeaveRequestDTO requestDTO) {
 
-        Employee employee = employeeRepo.findById(employeeId)
-                .orElseThrow(() -> new ResourceNotFound("Employee not found with id: " + employeeId));
+        Employee employee = validateAndGetEmployee();
 
         if (requestDTO.getEndDate().isBefore(requestDTO.getStartDate())) {
             throw new IllegalArgumentException("End date cannot be before start date");
@@ -59,26 +63,24 @@ public class EmployeeLeaveServiceImpl implements EmployeeLeaveService {
     }
 
     @Override
-    public List<LeaveResponseDTO> getLeaveRequest(Long employeeId) {
+    public List<LeaveResponseDTO> getLeaveRequest() {
 
-        employeeRepo.findById(employeeId)
-                .orElseThrow(() -> new ResourceNotFound("Employee not found with id: " + employeeId));
+        Employee employee = validateAndGetEmployee();
 
-        return leaveRequestRepo.findByEmployeeId(employeeId)
+        return leaveRequestRepo.findByEmployeeId(employee.getId())
                 .stream()
                 .map(LeaveMapper::leaveRequestToLeaveResponseDTO)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<LeaveResponseDTO> getLeaveRequestByStatus(Long employeeId, String status) {
+    public List<LeaveResponseDTO> getLeaveRequestByStatus(String status) {
 
-        employeeRepo.findById(employeeId)
-                .orElseThrow(() -> new ResourceNotFound("Employee not found with id: " + employeeId));
+        Employee employee = validateAndGetEmployee();
 
         LeaveStatus leaveStatus = LeaveStatus.valueOf(status.toUpperCase());
 
-        return leaveRequestRepo.findByEmployeeIdAndLeaveStatus(employeeId, leaveStatus)
+        return leaveRequestRepo.findByEmployeeIdAndLeaveStatus(employee.getId(), leaveStatus)
                 .stream()
                 .map(LeaveMapper::leaveRequestToLeaveResponseDTO)
                 .collect(Collectors.toList());
