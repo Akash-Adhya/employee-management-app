@@ -1,7 +1,5 @@
 package com.ems.service.employee;
 
-import com.ems.dto.requestDto.TaskUpdateRequestDTO;
-import com.ems.dto.responsDto.ApiResponseDto;
 import com.ems.dto.responsDto.EmployeeTaskResponseDTO;
 import com.ems.enums.TaskStatus;
 
@@ -11,5 +9,5 @@ public interface EmployeeTaskService {
 
     List<EmployeeTaskResponseDTO> getAllTasks();
     List<EmployeeTaskResponseDTO> getTasksByStatus(TaskStatus status);
-    ApiResponseDto<String> updateTaskStatus(Long employeeId, TaskStatus status);
+    String updateTaskStatus(Long employeeTaskId, TaskStatus status);
 }

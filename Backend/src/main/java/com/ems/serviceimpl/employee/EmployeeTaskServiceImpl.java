@@ -62,7 +62,7 @@ public class EmployeeTaskServiceImpl implements EmployeeTaskService {
     }
 
     @Override
-    public ApiResponseDto<String> updateTaskStatus(Long employeeTaskId, TaskStatus status) {
+    public String updateTaskStatus(Long employeeTaskId, TaskStatus status) {
 
         Employee employee = validateAndGetEmployee();
 
@@ -78,7 +78,7 @@ public class EmployeeTaskServiceImpl implements EmployeeTaskService {
 
         empToTaskRepo.save(et);
 
-        return new ApiResponseDto<>("Task status updated successfully", 200, "");
+        return "Task status updated successfully";
     }
 
 }

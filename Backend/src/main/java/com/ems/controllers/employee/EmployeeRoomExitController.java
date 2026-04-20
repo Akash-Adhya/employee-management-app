@@ -20,7 +20,7 @@ public class EmployeeRoomExitController {
             ) {
 
         String message = employeeRoomExitService.createExitRequest(roomExitRequestDTO);
-        return new ApiResponseDto<String>(message, 200, "");
+        return new ApiResponseDto<>(message, 200, "");
     }
 
 }

@@ -30,14 +30,13 @@ public class EmployeeTaskController {
     }
 
     @GetMapping("/{employeeId}/tasks")
-    public ResponseEntity<List<EmployeeTaskResponseDTO>> getAllTasks(@PathVariable Long employeeId) {
+    public ResponseEntity<List<EmployeeTaskResponseDTO>> getAllTasks() {
         List<EmployeeTaskResponseDTO> list = service.getAllTasks();
         return ResponseEntity.ok().body(list);
     }
 
     @GetMapping("/{employeeId}/tasks/{status}")
     public ResponseEntity<List<EmployeeTaskResponseDTO>> getTasksByStatus(
-            @Valid @PathVariable Long employeeId,
             @Valid @PathVariable TaskStatus status) {
 
         List<EmployeeTaskResponseDTO> list = service.getTasksByStatus(status);
@@ -45,9 +44,10 @@ public class EmployeeTaskController {
     }
 
     @PutMapping("/task/status/{employeeTaskId}")
-    public ResponseEntity<ApiResponseDto<String>> updateTaskStatus(@PathVariable Long employeeTaskId,
+    public ApiResponseDto<String> updateTaskStatus(@PathVariable Long employeeTaskId,
                                                            @RequestParam TaskStatus status) {
-        return ResponseEntity.ok().body(service.updateTaskStatus(employeeTaskId, status));
+        String message = service.updateTaskStatus(employeeTaskId, status);
+        return new ApiResponseDto<>(message, 200, "");
     }
 
 
