@@ -29,13 +29,13 @@ public class EmployeeTaskController {
         this.service = service;
     }
 
-    @GetMapping("/{employeeId}/tasks")
+    @GetMapping("/tasks")
     public ResponseEntity<List<EmployeeTaskResponseDTO>> getAllTasks() {
         List<EmployeeTaskResponseDTO> list = service.getAllTasks();
         return ResponseEntity.ok().body(list);
     }
 
-    @GetMapping("/{employeeId}/tasks/{status}")
+    @GetMapping("/tasks/{status}")
     public ResponseEntity<List<EmployeeTaskResponseDTO>> getTasksByStatus(
             @Valid @PathVariable TaskStatus status) {
 
