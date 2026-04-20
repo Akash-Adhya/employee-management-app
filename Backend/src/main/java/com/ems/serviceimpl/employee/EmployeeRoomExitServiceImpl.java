@@ -4,6 +4,7 @@ import com.ems.dto.requestDto.RoomExitRequestDTO;
 import com.ems.entities.Employee;
 import com.ems.entities.Room;
 import com.ems.entities.RoomExitRequest;
+import com.ems.entities.User;
 import com.ems.enums.Role;
 import com.ems.enums.RoomExitRequestStatus;
 import com.ems.exceptions.ResourceNotFound;
@@ -11,21 +12,27 @@ import com.ems.repositories.EmployeeRepo;
 import com.ems.repositories.RoomExitRequestRepo;
 import com.ems.service.employee.EmployeeRoomExitService;
 
+import com.ems.utils.SecurityUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class EmployeeRoomExitServiceImpl implements EmployeeRoomExitService {
 
-    private final EmployeeRepo employeeRepo;
     private final RoomExitRequestRepo roomExitRequestRepo;
+    private final SecurityUtil securityUtil;
+
+    private Employee validateAndGetEmployee(){
+        User user = securityUtil.getCurrentUser();
+        securityUtil.validateEmployee(user);
+        return securityUtil.getEmployee(user);
+    }
 
     @Override
     public String createExitRequest(RoomExitRequestDTO dto) {
 
-        Employee employee = employeeRepo.findById(employeeId)
-                .orElseThrow(() -> new ResourceNotFound(
-                        "Employee not found with id: " + employeeId));
+        Employee employee = validateAndGetEmployee();
 
         if (employee.getUser().getRole() != Role.EMPLOYEE) {
             throw new IllegalStateException("User is not an employee");

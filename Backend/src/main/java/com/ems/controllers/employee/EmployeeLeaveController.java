@@ -17,19 +17,19 @@ public class EmployeeLeaveController {
 
     private final EmployeeLeaveService leaveService;
 
-    @PostMapping("/create/leave-request/")
+    @PostMapping("/create")
     public ApiResponseDto<LeaveResponseDTO> createLeave(
             @Valid @RequestBody LeaveRequestDTO requestDTO) {
 
         return new ApiResponseDto<>("Leave Request Created", 200, leaveService.createLeaveRequest(requestDTO));
     }
 
-    @GetMapping("/get/leave-request/")
+    @GetMapping("/get")
     public ApiResponseDto<List<LeaveResponseDTO>> getLeaves() {
         return new ApiResponseDto<>("All leave requests", 200, leaveService.getLeaveRequest());
     }
 
-    @GetMapping("/leave-request/{status}/{employeeId}")
+    @GetMapping("/get/{status}")
     public ApiResponseDto<List<LeaveResponseDTO>> getLeavesByStatus(
             @PathVariable String status) {
 

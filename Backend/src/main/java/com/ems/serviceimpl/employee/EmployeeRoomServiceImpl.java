@@ -1,37 +1,41 @@
 package com.ems.serviceimpl.employee;
 
-import com.ems.service.employee.EmployeeRoomService;
-import org.springframework.stereotype.Service;
-
 import com.ems.dto.responsDto.RoomResponseDTO;
 import com.ems.entities.Employee;
 import com.ems.entities.Room;
+import com.ems.entities.User;
 import com.ems.enums.Role;
 import com.ems.exceptions.ResourceNotFound;
 import com.ems.mapper.RoomMapper;
 import com.ems.repositories.EmployeeRepo;
-
+import com.ems.service.employee.EmployeeRoomService;
+import com.ems.utils.SecurityUtil;
 import lombok.RequiredArgsConstructor;
-
+import org.springframework.stereotype.Service;
 
 
 @Service
 @RequiredArgsConstructor
 public class EmployeeRoomServiceImpl implements EmployeeRoomService {
-    private final EmployeeRepo employeeRepo;
+    private final SecurityUtil securityUtil;
 
-    public RoomResponseDTO getRoomDetailsByEmployeeId(Long employeeId){
-        Employee employee = employeeRepo.findById(employeeId)
-            .orElseThrow(() -> new ResourceNotFound("Employee not found with id: " + employeeId));
+    private Employee validateAndGetEmployee() {
+        User user = securityUtil.getCurrentUser();
+        securityUtil.validateEmployee(user);
+        return securityUtil.getEmployee(user);
+    }
 
-        
-        if(employee.getUser().getRole() != Role.EMPLOYEE){
-            throw new ResourceNotFound("User is not an employee with id: " + employeeId);
+    public RoomResponseDTO getRoomDetailsOfEmployee() {
+        Employee employee = validateAndGetEmployee();
+
+
+        if (employee.getUser().getRole() != Role.EMPLOYEE) {
+            throw new ResourceNotFound("User is not an employee with id: " + employee.getId());
         }
 
         Room room = employee.getRoom();
 
-        if(room == null){
+        if (room == null) {
             throw new ResourceNotFound("Employee is not assigned to any room");
         }
 
