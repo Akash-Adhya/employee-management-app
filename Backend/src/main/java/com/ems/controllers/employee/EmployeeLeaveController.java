@@ -28,12 +28,12 @@ public class EmployeeLeaveController {
             @PathVariable Long employeeId,
             @Valid @RequestBody LeaveRequestDTO requestDTO) {
 
-        return leaveService.createLeaveRequest(requestDTO);
+        return leaveService.createLeaveRequest(employeeId, requestDTO);
     }
 
     @GetMapping("/get/leave-request/{employeeId}")
     public List<LeaveResponseDTO> getLeaves(@PathVariable Long employeeId) {
-        return leaveService.getLeaveRequest();
+        return leaveService.getLeaveRequest(employeeId);
     }
 
     @GetMapping("/leave-request/{status}/{employeeId}")
@@ -41,7 +41,7 @@ public class EmployeeLeaveController {
             @PathVariable String status,
             @PathVariable Long employeeId) {
 
-        return leaveService.getLeaveRequestByStatus(status);
+        return leaveService.getLeaveRequestByStatus(employeeId, status);
     }
 
 }

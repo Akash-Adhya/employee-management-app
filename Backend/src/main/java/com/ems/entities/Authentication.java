@@ -29,4 +29,5 @@ public class Authentication {
     // reset password
     private String resetPasswordToken;
     private LocalDateTime resetPasswordExpiry;
+    private boolean resetPasswordVerified = false;
 }

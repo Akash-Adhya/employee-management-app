@@ -9,7 +9,8 @@ import java.util.List;
 
 public interface EmployeeTaskService {
 
-    List<EmployeeTaskResponseDTO> getAllTasks();
-    List<EmployeeTaskResponseDTO> getTasksByStatus(TaskStatus status);
+    List<EmployeeTaskResponseDTO> getAllTasks(Long employeeId);
+    List<EmployeeTaskResponseDTO> getTasksByStatus(Long employeeId, TaskStatus status);
+    ApiResponseDto<String> updateTask(Long taskId, TaskUpdateRequestDTO dto);
     ApiResponseDto<String> updateTaskStatus(Long employeeId, TaskStatus status);
 }
