@@ -1,5 +1,6 @@
 package com.ems.serviceimpl.employee;
 
+import com.ems.service.employee.EmployeeRoomService;
 import org.springframework.stereotype.Service;
 
 import com.ems.dto.responsDto.RoomResponseDTO;
@@ -16,7 +17,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class EmployeeRoomServiceImpl {
+public class EmployeeRoomServiceImpl implements EmployeeRoomService {
     private final EmployeeRepo employeeRepo;
 
     public RoomResponseDTO getRoomDetailsByEmployeeId(Long employeeId){
